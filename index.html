@@ -3,127 +3,185 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ben Cut Tracker</title>
+  <title>Ben Simple Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <style>
     :root{
+      --bg:#f5f5f7;
       --card:#ffffff;
       --card-2:#fafafc;
       --line:#e8e8ed;
       --text:#111111;
       --muted:#6e6e73;
+      --green:#2e7d32;
+      --green-soft:#edf7ee;
       --blue:#0066cc;
       --blue-soft:#eef5ff;
+      --orange:#b26b00;
+      --orange-soft:#fff6e8;
+      --red:#c23b30;
+      --red-soft:#fff1f0;
       --shadow:0 10px 30px rgba(0,0,0,.05);
       --radius:24px;
-      --max:1220px;
+      --radius-sm:16px;
+      --max:1180px;
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;font-family:Inter,system-ui,sans-serif;background:linear-gradient(180deg,#fbfbfd 0%,#f4f4f7 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-    .app{max-width:var(--max);margin:0 auto;padding:12px 10px 90px}
-    .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}
-    .brand-title,.section-title,.hero-title,.food-name,.recipe-name,.modal-title,.meal-name,.panel h3{font-family:"Instrument Serif",serif;font-weight:400;letter-spacing:-.02em;margin:0}
-    .brand-title{font-size:34px;line-height:1}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,sans-serif;
+      background:linear-gradient(180deg,#fbfbfd 0%,#f4f4f7 100%);
+      color:var(--text);
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    .app{max-width:var(--max);margin:0 auto;padding:18px 14px 80px}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}
+    .brand-title{font-family:"Instrument Serif",serif;font-size:34px;line-height:1;letter-spacing:-.02em}
     .brand-sub{margin-top:6px;font-size:12px;color:var(--muted);letter-spacing:.04em}
     .top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .pill,.btn,.chip,.tab-btn,.tiny-btn,.seg-btn,.quick-btn{font:inherit;border:none}
+    .pill,.btn,.chip,.tab-btn,.tiny-btn{font:inherit;border:none}
     .pill{padding:10px 14px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:600}
-    .btn,.tiny-btn,.chip,.tab-btn,.seg-btn,.quick-btn{cursor:pointer;transition:.18s ease}
+    .btn,.tiny-btn,.chip,.tab-btn{cursor:pointer;transition:.18s ease}
     .btn{padding:11px 14px;border-radius:14px;background:#111;color:#fff;font-size:13px;font-weight:600;box-shadow:var(--shadow)}
     .btn.secondary{background:#fff;color:#111;border:1px solid var(--line)}
-    .btn:hover,.tab-btn:hover,.chip:hover,.tiny-btn:hover,.seg-btn:hover,.quick-btn:hover{transform:translateY(-1px)}
+    .btn:hover,.tab-btn:hover,.chip:hover,.tiny-btn:hover{transform:translateY(-1px)}
     .layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px}
     .sidebar{display:flex;flex-direction:column;gap:14px;position:sticky;top:14px;height:max-content}
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .panel{padding:18px}.panel h3{font-size:24px;margin-bottom:12px}
+    .panel{padding:18px}
+    .panel h3,.section-title,.hero-title,.food-name,.recipe-name,.modal-title{margin:0;font-family:"Instrument Serif",serif;font-weight:400;letter-spacing:-.02em}
+    .panel h3{font-size:24px;margin-bottom:12px}
     .small{font-size:12px;color:var(--muted);line-height:1.6}
     .metric-stack{display:grid;gap:10px}
     .metric-pill{padding:12px 14px;border-radius:16px;background:var(--card-2);border:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}
-    .metric-pill strong{font-size:14px}.metric-pill span{font-size:12px;color:var(--muted)}
-    .hero{padding:22px;margin-bottom:14px}.hero-title{font-size:42px;line-height:.95}
+    .metric-pill strong{font-size:14px}
+    .metric-pill span{font-size:12px;color:var(--muted)}
+    .hero{padding:22px;margin-bottom:14px}
+    .hero-title{font-size:42px;line-height:.95}
     .hero-copy{margin-top:10px;font-size:14px;line-height:1.65;color:var(--muted);max-width:780px}
     .hero-grid{margin-top:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
     .hero-stat{padding:16px;border-radius:20px;background:var(--card-2);border:1px solid var(--line)}
     .hero-stat .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
     .hero-stat .value{margin-top:8px;font-size:28px;font-family:"Instrument Serif",serif;line-height:1}
     .hero-stat .note{margin-top:6px;font-size:12px;color:var(--muted)}
-    .tabs-card{padding:10px}.tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tabs-card{padding:10px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
     .tab-btn{padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.04em}
     .tab-btn.active{background:#111;color:#fff;border-color:#111}
-    .tab-panel{display:none;margin-top:14px}.tab-panel.active{display:block}
-    .section-card{padding:18px}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
-    .section-title{font-size:30px}.section-sub{font-size:13px;color:var(--muted)}
+    .tab-panel{display:none;margin-top:14px}
+    .tab-panel.active{display:block}
+    .section-card{padding:18px}
+    .section-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+    .section-title{font-size:30px}
+    .section-sub{font-size:13px;color:var(--muted)}
     .grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
     .today-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .input-card{padding:14px;border-radius:18px;background:var(--card-2);border:1px solid var(--line)}
     .input-card label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
-    .input-card input,.input-card select,.search input,.modal input,.modal textarea,.modal select,.auth-input{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;outline:none}
-    .input-card textarea,.modal textarea{width:100%;min-height:90px;resize:vertical}
+    .input-card input,.input-card select,.search input,.modal input,.modal textarea{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;outline:none}
+    .input-card textarea,.modal textarea{width:100%;min-height:90px;resize:vertical;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font:inherit;outline:none}
     input:focus,select:focus,textarea:focus{border-color:#b7d3ff;box-shadow:0 0 0 4px rgba(0,102,204,.08)}
-    .today-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.summary-boxes{display:grid;gap:10px}
+    .today-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .summary-boxes{display:grid;gap:10px}
     .summary-box{padding:16px;border-radius:18px;border:1px solid var(--line);background:var(--card-2)}
     .summary-box .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-    .summary-box .big{margin-top:8px;font-size:26px;font-family:"Instrument Serif",serif}.summary-box .text{margin-top:8px;font-size:13px;line-height:1.55;color:var(--muted)}
-    .search{position:relative;margin-bottom:12px}.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}.search input{padding-left:42px}
-    .chip-row,.seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-    .chip,.seg-btn{padding:10px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--muted)}
-    .chip.active,.seg-btn.active{background:#111;color:#fff;border-color:#111}
-    .foods-grid,.meals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-    .food-card,.meal-card{padding:16px;border-radius:20px;border:1px solid var(--line);background:var(--card-2);display:flex;flex-direction:column;justify-content:space-between;min-height:152px}
-    .food-card.clickable,.meal-card.clickable{cursor:pointer}
-    .food-name,.meal-name{font-size:23px;line-height:1.02}.food-meta,.meal-meta{margin-top:6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-    .food-stats,.meal-stats{margin-top:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:10px;border-radius:14px;background:#fff;border:1px solid var(--line)}
-    .stat strong{display:block;font-size:17px;font-family:"Instrument Serif",serif;font-weight:400}.stat span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-    .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.quick-btn{padding:10px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:600;color:#111}
-    .recipes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}.recipe-card{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--card-2)}
-    .recipe-top{padding:18px;cursor:pointer}.recipe-topline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}.recipe-emoji{font-size:30px;line-height:1}
+    .summary-box .big{margin-top:8px;font-size:26px;font-family:"Instrument Serif",serif}
+    .summary-box .text{margin-top:8px;font-size:13px;line-height:1.55;color:var(--muted)}
+    .search{position:relative;margin-bottom:12px}
+    .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    .search input{padding-left:42px}
+    .chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .chip{padding:10px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--muted)}
+    .chip.active{background:#111;color:#fff;border-color:#111}
+    .foods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+    .food-card{padding:16px;border-radius:20px;border:1px solid var(--line);background:var(--card-2);cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;min-height:152px}
+    .food-name{font-size:23px;line-height:1.02}
+    .food-meta{margin-top:6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .food-stats{margin-top:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .stat{padding:10px;border-radius:14px;background:#fff;border:1px solid var(--line)}
+    .stat strong{display:block;font-size:17px;font-family:"Instrument Serif",serif;font-weight:400}
+    .stat span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .recipes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+    .recipe-card{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--card-2)}
+    .recipe-top{padding:18px;cursor:pointer}
+    .recipe-topline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}
+    .recipe-emoji{font-size:30px;line-height:1}
     .tag{padding:8px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-    .recipe-name{font-size:28px;line-height:1.02}.recipe-meta{margin-top:8px;font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}.recipe-stats{margin-top:14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-    .recipe-detail{display:none;padding:0 18px 18px;border-top:1px solid var(--line);background:#fff}.recipe-detail.open{display:block}.detail-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;padding-top:16px}
-    .detail-block h4{margin:0 0 10px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.ingredient-list,.steps-list{list-style:none;margin:0;padding:0}.ingredient-list li,.steps-list li{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.55}.ingredient-list li:last-child,.steps-list li:last-child{border-bottom:none}
-    .shopping-layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:14px}.stack{display:grid;gap:10px}.shopping-group+.shopping-group{margin-top:16px}
+    .recipe-name{font-size:28px;line-height:1.02}
+    .recipe-meta{margin-top:8px;font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+    .recipe-stats{margin-top:14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .recipe-detail{display:none;padding:0 18px 18px;border-top:1px solid var(--line);background:#fff}
+    .recipe-detail.open{display:block}
+    .detail-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;padding-top:16px}
+    .detail-block h4{margin:0 0 10px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .ingredient-list,.steps-list{list-style:none;margin:0;padding:0}
+    .ingredient-list li,.steps-list li{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.55}
+    .ingredient-list li:last-child,.steps-list li:last-child{border-bottom:none}
+    .shopping-layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:14px}
+    .stack{display:grid;gap:10px}
+    .shopping-group+.shopping-group{margin-top:16px}
     .shopping-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-    .shopping-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.shopping-item:last-child{border-bottom:none}
-    .check{width:22px;height:22px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;background:#fff}.check.checked{background:#111;color:#fff;border-color:#111}.shopping-item.done .shopping-name{text-decoration:line-through;color:var(--muted)}.shopping-qty{font-size:12px;color:var(--muted)}
+    .shopping-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+    .shopping-item:last-child{border-bottom:none}
+    .check{width:22px;height:22px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;background:#fff}
+    .check.checked{background:#111;color:#fff;border-color:#111}
+    .shopping-item.done .shopping-name{text-decoration:line-through;color:var(--muted)}
+    .shopping-qty{font-size:12px;color:var(--muted)}
     .tiny-btn{width:32px;height:32px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--muted)}
-    .progress-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.progress-card{padding:16px;border-radius:20px;background:var(--card-2);border:1px solid var(--line)}.progress-card .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.progress-card .value{margin-top:8px;font-size:28px;font-family:"Instrument Serif",serif;line-height:1}
-    .log-list,.today-log{margin-top:14px;border-top:1px solid var(--line)}
+    .progress-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .progress-card{padding:16px;border-radius:20px;background:var(--card-2);border:1px solid var(--line)}
+    .progress-card .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .progress-card .value{margin-top:8px;font-size:28px;font-family:"Instrument Serif",serif;line-height:1}
+    .log-list{margin-top:14px;border-top:1px solid var(--line)}
     .log-row{display:grid;grid-template-columns:110px repeat(4,minmax(0,1fr)) 1.2fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px;align-items:start}
-    .meal-log-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center}
     .log-head{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:10px}
     .empty{text-align:center;padding:38px 14px;color:var(--muted);font-size:14px;line-height:1.7}
-    .ring-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}.ring-card{padding:14px;border-radius:18px;background:var(--card-2);border:1px solid var(--line)}.ring-card .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.ring-card .value{margin-top:6px;font-size:26px;font-family:"Instrument Serif",serif}.ring-card .sub{margin-top:4px;font-size:12px;color:var(--muted)}
-    .modal-overlay{position:fixed;inset:0;background:rgba(17,17,17,.18);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:18px;z-index:30}.modal-overlay.open{display:flex}
-    .modal{width:min(540px,100%);background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.12);overflow:hidden}.modal-body{padding:22px}.modal-title{font-size:36px;line-height:1}.modal-sub{margin-top:6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-    .modal-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:16px 0}.modal-stat{padding:12px;border-radius:16px;background:var(--card-2);border:1px solid var(--line)}.modal-stat strong{display:block;font-size:22px;font-family:"Instrument Serif",serif;font-weight:400}.modal-stat span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.modal-actions{display:flex;gap:10px;padding:0 22px 22px}
-    .toast{position:fixed;right:16px;bottom:16px;z-index:40;background:#111;color:#fff;padding:13px 16px;border-radius:16px;box-shadow:var(--shadow);transform:translateY(8px);opacity:0;transition:.2s ease;pointer-events:none;font-size:13px}.toast.show{transform:translateY(0);opacity:1}
-    @media (max-width:980px){.layout,.grid-2,.shopping-layout,.detail-grid{grid-template-columns:1fr}.sidebar{position:static}.hero-grid,.progress-grid,.ring-row{grid-template-columns:repeat(2,minmax(0,1fr))}.log-row{grid-template-columns:1fr 1fr;gap:8px}}
-    @media (max-width:680px){.app{padding:12px 10px 90px}.topbar{flex-direction:column;align-items:stretch}.top-actions{justify-content:flex-start}.brand-title{font-size:30px}.hero{padding:18px}.hero-title{font-size:34px}.hero-grid,.today-grid,.recipe-stats,.modal-grid,.progress-grid,.ring-row{grid-template-columns:1fr 1fr}.foods-grid,.recipes-grid,.meals-grid{grid-template-columns:1fr}.section-card,.panel{padding:16px}.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.tab-btn{width:100%}.log-row{grid-template-columns:1fr}.meal-log-row{grid-template-columns:1fr auto}.modal-actions{flex-direction:column}}
+    .modal-overlay{position:fixed;inset:0;background:rgba(17,17,17,.18);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:18px;z-index:30}
+    .modal-overlay.open{display:flex}
+    .modal{width:min(520px,100%);background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.12);overflow:hidden}
+    .modal-body{padding:22px}
+    .modal-title{font-size:36px;line-height:1}
+    .modal-sub{margin-top:6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .modal-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:16px 0}
+    .modal-stat{padding:12px;border-radius:16px;background:var(--card-2);border:1px solid var(--line)}
+    .modal-stat strong{display:block;font-size:22px;font-family:"Instrument Serif",serif;font-weight:400}
+    .modal-stat span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .modal-actions{display:flex;gap:10px;padding:0 22px 22px}
+    .toast{position:fixed;right:16px;bottom:16px;z-index:40;background:#111;color:#fff;padding:13px 16px;border-radius:16px;box-shadow:var(--shadow);transform:translateY(8px);opacity:0;transition:.2s ease;pointer-events:none;font-size:13px}
+    .toast.show{transform:translateY(0);opacity:1}
+    @media (max-width:980px){
+      .layout,.grid-2,.shopping-layout,.detail-grid{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .hero-grid,.progress-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .log-row{grid-template-columns:1fr 1fr;gap:8px}
+    }
+    @media (max-width:680px){
+      .app{padding:12px 10px 90px}
+      .topbar{flex-direction:column;align-items:stretch}
+      .top-actions{justify-content:flex-start}
+      .brand-title{font-size:30px}
+      .hero{padding:18px}
+      .hero-title{font-size:34px}
+      .hero-grid,.today-grid,.recipe-stats,.modal-grid,.progress-grid{grid-template-columns:1fr 1fr}
+      .foods-grid,.recipes-grid{grid-template-columns:1fr}
+      .section-card,.panel{padding:16px}
+      .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+      .tab-btn{width:100%}
+      .log-row{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="card panel" id="auth-panel" style="margin-bottom:14px;">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
-        <div>
-          <div style="font-weight:600;">Cloud sync</div>
-          <div class="small" id="auth-status">Not signed in</div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <input id="auth-email" class="auth-input" type="email" placeholder="you@example.com" style="min-width:220px;" />
-          <button class="btn secondary" id="send-magic-link-btn" type="button">Send magic link</button>
-          <button class="btn secondary" id="sign-out-btn" type="button" style="display:none;">Sign out</button>
-        </div>
-      </div>
-    </div>
-
     <div class="topbar">
       <div>
-        <div class="brand-title">Ben Cut Tracker</div>
-        <div class="brand-sub">Monday, April 13, 2026 start · personal cut system</div>
+        <div class="brand-title">Ben Simple Tracker</div>
+        <div class="brand-sub" id="header-date">Monday, April 13 start · personal cut system</div>
       </div>
       <div class="top-actions">
         <div class="pill">Start date: April 13, 2026</div>
@@ -142,34 +200,34 @@
             <div class="metric-pill"><div><strong>Calories</strong><span>Default cut</span></div><strong>1,900</strong></div>
             <div class="metric-pill"><div><strong>Water</strong><span>Daily floor</span></div><strong>3L</strong></div>
           </div>
-          <div class="small" style="margin-top:12px;">This version tracks what you actually eat. Tap foods, meals, favorites, recent items, or repeat yesterday instead of estimating macros.</div>
+          <div class="small" style="margin-top:12px;">Simple, personal, mobile-first, and clean. Everything stays saved in this browser with no cloud setup.</div>
         </section>
 
         <section class="card panel">
-          <h3>Logging flow</h3>
-          <div class="small">1. Add foods or meals to Today. 2. Let totals calculate automatically. 3. Everything autosaves to the cloud when signed in.</div>
+          <h3>What matters</h3>
+          <div class="small">
+            Just log the few things that actually help: weight, carbs, protein, water, steps, workout, energy, digestion, and notes.
+          </div>
         </section>
       </aside>
 
       <main>
         <section class="card hero">
-          <h1 class="hero-title">Track intake.<br>Not guesses.</h1>
-          <div class="hero-copy">Built for quick phone use: tap what you ate, watch totals update, and let it save in the background across devices.</div>
+          <h1 class="hero-title">90-day cut.<br>Minimal friction.</h1>
+          <div class="hero-copy">A lighter version of the tracker: simple daily logging, food reference, recipes, and progress. No sync, no accounts, no friction.</div>
           <div class="hero-grid">
             <div class="hero-stat"><div class="label">Day</div><div class="value" id="hero-day">1</div><div class="note">since April 13</div></div>
             <div class="hero-stat"><div class="label">Days left</div><div class="value" id="hero-left">90</div><div class="note">in 90-day window</div></div>
             <div class="hero-stat"><div class="label">Foods</div><div class="value" id="hero-foods">0</div><div class="note">curated references</div></div>
-            <div class="hero-stat"><div class="label">Meals</div><div class="value" id="hero-meals">0</div><div class="note">repeatable options</div></div>
+            <div class="hero-stat"><div class="label">Recipes</div><div class="value" id="hero-recipes">0</div><div class="note">practical options</div></div>
           </div>
         </section>
 
         <section class="card tabs-card">
           <div class="tabs">
             <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-            <button class="tab-btn" data-tab="track">Track</button>
             <button class="tab-btn" data-tab="foods">Foods</button>
             <button class="tab-btn" data-tab="recipes">Recipes</button>
-            <button class="tab-btn" data-tab="shopping">Shopping</button>
             <button class="tab-btn" data-tab="progress">Progress</button>
           </div>
         </section>
@@ -179,26 +237,38 @@
             <div class="section-head">
               <div>
                 <div class="section-title">Today</div>
-                <div class="section-sub">Your actual intake totals and daily check-in.</div>
+                <div class="section-sub">Fast check-in. Mostly for phone.</div>
               </div>
             </div>
-
-            <div class="ring-row">
-              <div class="ring-card"><div class="label">Calories</div><div class="value" id="today-cal">0</div><div class="sub">target 1,900</div></div>
-              <div class="ring-card"><div class="label">Protein</div><div class="value" id="today-pro">0g</div><div class="sub">goal 180g+</div></div>
-              <div class="ring-card"><div class="label">Net carbs</div><div class="value" id="today-carb">0g</div><div class="sub">limit 25g</div></div>
-              <div class="ring-card"><div class="label">Fat</div><div class="value" id="today-fat">0g</div><div class="sub">automatic total</div></div>
-            </div>
-
-            <div class="grid-2" style="margin-top:14px;">
+            <div class="grid-2">
               <div>
-                <div class="summary-box">
-                  <div class="eyebrow">Consumed today</div>
-                  <div class="today-log" id="today-log-list"></div>
-                  <div class="today-actions">
-                    <button class="btn secondary" onclick="clearTodayIntake()">Clear today intake</button>
-                    <button class="btn secondary" onclick="repeatYesterday()">Repeat yesterday</button>
+                <div class="today-grid">
+                  <div class="input-card"><label>Date</label><input id="log-date" type="date"></div>
+                  <div class="input-card"><label>Weight</label><input id="log-weight" type="number" step="0.1" placeholder="240"></div>
+                  <div class="input-card"><label>Net carbs</label><input id="log-carbs" type="number" step="1" placeholder="18"></div>
+                  <div class="input-card"><label>Protein</label><input id="log-protein" type="number" step="1" placeholder="165"></div>
+                  <div class="input-card"><label>Water (L)</label><input id="log-water" type="number" step="0.1" placeholder="2.8"></div>
+                  <div class="input-card"><label>Steps</label><input id="log-steps" type="number" step="100" placeholder="7200"></div>
+                  <div class="input-card"><label>Workout</label>
+                    <select id="log-workout">
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
+                    </select>
                   </div>
+                  <div class="input-card"><label>Adherence</label>
+                    <select id="log-adherence">
+                      <option value="Yes">Yes</option>
+                      <option value="Mostly">Mostly</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+                  <div class="input-card"><label>Energy /10</label><input id="log-energy" type="number" min="1" max="10" step="1" placeholder="7"></div>
+                  <div class="input-card"><label>Digestion /10</label><input id="log-digestion" type="number" min="1" max="10" step="1" placeholder="6"></div>
+                </div>
+                <div class="input-card" style="margin-top:10px;"><label>Notes</label><textarea id="log-notes" placeholder="Low appetite, great energy, bloated, steak dinner, etc."></textarea></div>
+                <div class="today-actions">
+                  <button class="btn" onclick="saveLog()">Save today</button>
+                  <button class="btn secondary" onclick="clearForm()">Clear form</button>
                 </div>
               </div>
 
@@ -206,7 +276,7 @@
                 <div class="summary-box">
                   <div class="eyebrow">Today status</div>
                   <div class="big" id="status-title">Ready</div>
-                  <div class="text" id="status-text">Start adding what you ate and the app will read the day for you automatically.</div>
+                  <div class="text" id="status-text">Log today’s numbers and the app will give you a simple read on where you stand.</div>
                 </div>
                 <div class="summary-box">
                   <div class="eyebrow">Cut pace</div>
@@ -220,44 +290,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="grid-2" style="margin-top:14px;">
-              <div>
-                <div class="today-grid">
-                  <div class="input-card"><label>Date</label><input id="log-date" type="date"></div>
-                  <div class="input-card"><label>Weight</label><input id="log-weight" type="number" step="0.1" placeholder="240"></div>
-                  <div class="input-card"><label>Water (L)</label><input id="log-water" type="number" step="0.1" placeholder="2.8"></div>
-                  <div class="input-card"><label>Steps</label><input id="log-steps" type="number" step="100" placeholder="7200"></div>
-                  <div class="input-card"><label>Workout</label><select id="log-workout"><option value="No">No</option><option value="Yes">Yes</option></select></div>
-                  <div class="input-card"><label>Adherence</label><select id="log-adherence"><option value="Yes">Yes</option><option value="Mostly">Mostly</option><option value="No">No</option></select></div>
-                  <div class="input-card"><label>Energy /10</label><input id="log-energy" type="number" min="1" max="10" step="1" placeholder="7"></div>
-                  <div class="input-card"><label>Digestion /10</label><input id="log-digestion" type="number" min="1" max="10" step="1" placeholder="6"></div>
-                </div>
-                <div class="input-card" style="margin-top:10px;"><label>Notes</label><textarea id="log-notes" placeholder="Low appetite, bloated, steak dinner, felt strong, etc."></textarea></div>
-                <div class="today-actions">
-                  <button class="btn secondary" onclick="forceSyncCurrentDay()">Sync now</button>
-                  <button class="btn secondary" onclick="clearForm()">Clear form</button>
-                </div>
-              </div>
-              <div class="summary-box">
-                <div class="eyebrow">Smart note</div>
-                <div class="big" id="smart-title">Use Track</div>
-                <div class="text" id="smart-text">The Track tab is now the fastest way to log meals: favorites, recent items, meal library, food library, and repeat yesterday.</div>
-              </div>
-            </div>
-          </section>
-        </section>
-
-        <section class="tab-panel" id="panel-track">
-          <section class="card section-card">
-            <div class="section-head">
-              <div>
-                <div class="section-title">Track intake</div>
-                <div class="section-sub">Add meals or foods directly to today. Designed for speed on phone.</div>
-              </div>
-            </div>
-            <div class="seg-row" id="track-segs"></div>
-            <div id="track-content"></div>
           </section>
         </section>
 
@@ -266,12 +298,12 @@
             <div class="section-head">
               <div>
                 <div class="section-title">Foods</div>
-                <div class="section-sub">Curated library. Tap any food for macros or add it straight to today.</div>
+                <div class="section-sub">Curated for your cut, not a random nutrition database.</div>
               </div>
             </div>
             <div class="search">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
-              <input id="food-search" placeholder="Search avocado, steak, salmon, eggs…">
+              <input id="food-search" placeholder="Search avocado, steak, sashimi, eggs, rotisserie chicken…">
             </div>
             <div class="chip-row" id="food-chips"></div>
             <div class="foods-grid" id="foods-grid"></div>
@@ -295,39 +327,12 @@
           </section>
         </section>
 
-        <section class="tab-panel" id="panel-shopping">
-          <section class="card section-card">
-            <div class="section-head">
-              <div>
-                <div class="section-title">Shopping</div>
-                <div class="section-sub">Your weekly staples and recipe imports.</div>
-              </div>
-            </div>
-            <div class="shopping-layout">
-              <div class="card panel" style="background:var(--card-2)">
-                <div class="stack">
-                  <div class="input-card"><label>Item</label><input id="shop-name" placeholder="Avocados"></div>
-                  <div class="input-card"><label>Qty</label><input id="shop-qty" placeholder="6"></div>
-                  <div class="input-card"><label>Category</label><select id="shop-cat"></select></div>
-                  <button class="btn" onclick="addManualItem()">Add item</button>
-                  <button class="btn secondary" onclick="copyList()">Copy list</button>
-                  <button class="btn secondary" onclick="clearChecked()">Clear checked</button>
-                  <button class="btn secondary" onclick="clearAllShopping()">Clear all</button>
-                </div>
-              </div>
-              <div class="card panel" style="background:var(--card-2)">
-                <div id="shopping-list"></div>
-              </div>
-            </div>
-          </section>
-        </section>
-
         <section class="tab-panel" id="panel-progress">
           <section class="card section-card">
             <div class="section-head">
               <div>
                 <div class="section-title">Progress</div>
-                <div class="section-sub">Simple trend view from your saved days.</div>
+                <div class="section-sub">Simple trend view from your daily logs.</div>
               </div>
             </div>
             <div class="progress-grid">
@@ -355,38 +360,28 @@
         </div>
         <div class="input-card"><label>Grams</label><input id="modal-grams" type="number" min="1" max="2000" step="1"></div>
         <div class="input-card" id="unit-block" style="margin-top:10px;display:none"><label>Units</label><input id="modal-units" type="number" min="0.25" step="0.25"><div class="small" id="unit-note" style="margin-top:8px"></div></div>
-        <div class="input-card" style="margin-top:10px;"><label>Log to today</label><select id="modal-meal-type"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div>
       </div>
       <div class="modal-actions">
         <button class="btn secondary" onclick="closeModal()">Close</button>
-        <button class="btn secondary" onclick="toggleFavoriteFood()" id="favorite-btn">Favorite</button>
-        <button class="btn" onclick="addModalFoodToToday()">Add to today</button>
+        <button class="btn" onclick="closeModal()">Done</button>
       </div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = "https://wvphelnjodzytkzpboop.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_LsB10eNKvyhcb1SqFHV3_w_RFR8vRrZ";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  </script>
-
-  <script>
-    const STORAGE_KEY = 'ben_cut_tracker_v4';
+    const STORAGE_KEY = 'ben_cut_tracker_v2';
     const START_DATE = '2026-04-13';
     const SHOP_CATEGORIES = ['Meat & Seafood','Dairy & Eggs','Produce','Nuts & Seeds','Pantry','Prepared'];
-    const TRACK_SECTIONS = ['Favorites','Recent','Meals','Foods'];
 
     const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
-      foodCat:'All', recipeCat:'All', shopping:[], logs:[], todayEntries:{}, favoriteFoodIds:[1,4,17,23], favoriteMealIds:[1,3,5,8,16], recentAdds:[], trackSection:'Favorites'
+      foodCat:'All',
+      recipeCat:'All',
+      logs:[]
     };
 
     let activeFood = null;
-    let authUser = null;
-    let fieldSaveTimer = null;
 
     const FOODS = [
       {id:1,name:'Eggs, whole',cat:'Breakfast Staples',cal:155,fat:10.6,pro:12.6,nc:.6,unit:'egg',unitG:50},
@@ -451,22 +446,200 @@
       {id:1,name:'Eggs, Avocado & Smoked Salmon',cat:'Breakfast',cuisine:'Daily',emoji:'🥚',time:'8 min',servings:1,macros:{cal:430,fat:31,pro:28,carbs:4},ingredients:[{name:'Eggs, whole',qty:3,unit:'eggs'},{name:'Avocado',qty:.5,unit:'avocado'},{name:'Smoked salmon',qty:85,unit:'g'}],steps:['Soft scramble or fry eggs.','Plate with avocado and smoked salmon.','Salt lightly and eat immediately.']},
       {id:2,name:'Greek Yogurt Protein Bowl',cat:'Breakfast',cuisine:'Daily',emoji:'🥣',time:'3 min',servings:1,macros:{cal:320,fat:20,pro:24,carbs:8},ingredients:[{name:'Greek yogurt, full-fat',qty:170,unit:'g'},{name:'Chia seeds',qty:1,unit:'tbsp'},{name:'Macadamia nuts',qty:20,unit:'g'}],steps:['Add yogurt to bowl.','Top with chia and chopped macadamias.','Use on higher-protein low-appetite mornings.']},
       {id:3,name:'Rotisserie Chicken Salad',cat:'Fast Lunch',cuisine:'Daily',emoji:'🥗',time:'7 min',servings:1,macros:{cal:450,fat:29,pro:39,carbs:5},ingredients:[{name:'Rotisserie chicken',qty:180,unit:'g'},{name:'Romaine',qty:2,unit:'cups'},{name:'Olive oil',qty:1,unit:'tbsp'},{name:'Cucumber',qty:.5,unit:'cucumber'}],steps:['Pull chicken into chunks.','Toss with romaine and cucumber.','Dress with olive oil, salt and lemon.']},
-      {id:4,name:'Burger Bowl',cat:'Fast Lunch',cuisine:'Daily',emoji:'🍔',time:'12 min',servings:1,macros:{cal:520,fat:36,pro:38,carbs:6},ingredients:[{name:'Burger patty',qty:2,unit:'patties'},{name:'Romaine',qty:2,unit:'cups'},{name:'Cheddar cheese',qty:1,unit:'slice'}],steps:['Cook burger patties hard.','Slice over lettuce.','Top with cheddar.']},
-      {id:5,name:'Ribeye & Asparagus',cat:'Dinner',cuisine:'Classic',emoji:'🥩',time:'18 min',servings:1,macros:{cal:690,fat:48,pro:50,carbs:4},ingredients:[{name:'Ribeye steak',qty:280,unit:'g'},{name:'Butter',qty:1,unit:'tbsp'}],steps:['Sear ribeye in hot pan.','Rest steak.','Cook asparagus in steak fat and butter.']},
+      {id:4,name:'Burger Bowl',cat:'Fast Lunch',cuisine:'Daily',emoji:'🍔',time:'12 min',servings:1,macros:{cal:520,fat:36,pro:38,carbs:6},ingredients:[{name:'Burger patty',qty:2,unit:'patties'},{name:'Romaine',qty:2,unit:'cups'},{name:'Cheddar cheese',qty:1,unit:'slice'},{name:'Pickles',qty:4,unit:'pieces'}],steps:['Cook burger patties hard.','Slice over lettuce.','Top with cheddar and pickles.']},
+      {id:5,name:'Ribeye & Asparagus',cat:'Dinner',cuisine:'Classic',emoji:'🥩',time:'18 min',servings:1,macros:{cal:690,fat:48,pro:50,carbs:4},ingredients:[{name:'Ribeye steak',qty:280,unit:'g'},{name:'Asparagus',qty:180,unit:'g'},{name:'Butter',qty:1,unit:'tbsp'}],steps:['Sear ribeye in hot pan.','Rest steak.','Cook asparagus in steak fat and butter.']},
       {id:6,name:'Salmon, Fennel & Endive',cat:'Dinner',cuisine:'Light',emoji:'🐟',time:'16 min',servings:1,macros:{cal:510,fat:31,pro:38,carbs:7},ingredients:[{name:'Salmon',qty:220,unit:'g'},{name:'Fennel',qty:100,unit:'g'},{name:'Endive',qty:2,unit:'heads'},{name:'Olive oil',qty:1,unit:'tbsp'}],steps:['Pan roast salmon.','Thinly slice fennel and endive.','Dress salad and serve with fish.']},
       {id:7,name:'Chicken Thighs & Broccoli',cat:'Dinner',cuisine:'Daily',emoji:'🍗',time:'22 min',servings:1,macros:{cal:540,fat:31,pro:47,carbs:7},ingredients:[{name:'Chicken thigh, skin-on',qty:260,unit:'g'},{name:'Broccoli',qty:180,unit:'g'},{name:'Olive oil',qty:1,unit:'tbsp'}],steps:['Roast or pan-sear chicken thighs.','Steam or roast broccoli.','Finish with olive oil and salt.']},
-      {id:8,name:'Sardines, Cucumber & Labneh',cat:'Low Appetite',cuisine:'Wegovy',emoji:'🥒',time:'4 min',servings:1,macros:{cal:300,fat:21,pro:22,carbs:5},ingredients:[{name:'Sardines in olive oil',qty:1,unit:'tin'},{name:'Cucumber',qty:.5,unit:'cucumber'},{name:'Labneh',qty:2,unit:'tbsp'}],steps:['Plate sardines.','Slice cucumber.','Add labneh.']},
+      {id:8,name:'Sardines, Cucumber & Labneh',cat:'Low Appetite',cuisine:'Wegovy',emoji:'🥒',time:'4 min',servings:1,macros:{cal:300,fat:21,pro:22,carbs:5},ingredients:[{name:'Sardines in olive oil',qty:1,unit:'tin'},{name:'Cucumber',qty:.5,unit:'cucumber'},{name:'Labneh',qty:2,unit:'tbsp'}],steps:['Plate sardines.','Slice cucumber.','Add a couple spoons of labneh.']},
       {id:9,name:'Bone Broth Protein Recovery',cat:'Low Appetite',cuisine:'Wegovy',emoji:'🍵',time:'5 min',servings:1,macros:{cal:160,fat:5,pro:24,carbs:2},ingredients:[{name:'Bone broth',qty:2,unit:'cups'},{name:'Chicken breast',qty:90,unit:'g'}],steps:['Heat broth.','Add shredded cooked chicken.','Use on very low appetite days.']},
       {id:10,name:'Tuna Salad Endive Boats',cat:'Fast Lunch',cuisine:'Daily',emoji:'🐟',time:'6 min',servings:1,macros:{cal:340,fat:22,pro:28,carbs:4},ingredients:[{name:'Tuna salad',qty:1,unit:'portion'},{name:'Endive',qty:3,unit:'heads'}],steps:['Separate endive leaves.','Spoon tuna salad into each.','Eat cold.']},
-      {id:11,name:'Shakshuka Light',cat:'Breakfast',cuisine:'Middle Eastern',emoji:'🍳',time:'18 min',servings:1,macros:{cal:310,fat:21,pro:18,carbs:8},ingredients:[{name:'Eggs, whole',qty:3,unit:'eggs'}],steps:['Cook pepper in olive oil.','Add tomato sauce.','Crack eggs into sauce and cover until set.']},
-      {id:12,name:'Steakhouse Order',cat:'Restaurant',cuisine:'Eating Out',emoji:'🍽️',time:'Order',servings:1,macros:{cal:620,fat:39,pro:54,carbs:7},ingredients:[{name:'Steakhouse steak dinner',qty:1,unit:'plate'}],steps:['Order steak.','Swap starch for vegetables.','Skip bread and dessert.']},
-      {id:13,name:'Sashimi Dinner',cat:'Restaurant',cuisine:'Eating Out',emoji:'🍣',time:'Order',servings:1,macros:{cal:360,fat:20,pro:38,carbs:4},ingredients:[{name:'Sashimi assortment',qty:1,unit:'order'}],steps:['Order sashimi, not rolls.','Avoid rice and sweet sauces.']},
+      {id:11,name:'Shakshuka Light',cat:'Breakfast',cuisine:'Middle Eastern',emoji:'🍳',time:'18 min',servings:1,macros:{cal:310,fat:21,pro:18,carbs:8},ingredients:[{name:'Eggs, whole',qty:3,unit:'eggs'},{name:'Bell pepper, red',qty:.5,unit:'pepper'},{name:'Tomato sauce',qty:.5,unit:'cup'}],steps:['Cook pepper in olive oil.','Add tomato sauce.','Crack eggs into sauce and cover until set.']},
+      {id:12,name:'Steakhouse Order',cat:'Restaurant',cuisine:'Eating Out',emoji:'🍽️',time:'Order',servings:1,macros:{cal:620,fat:39,pro:54,carbs:7},ingredients:[{name:'Steakhouse steak dinner',qty:1,unit:'plate'}],steps:['Order steak.','Swap starch for asparagus or spinach.','Skip bread, desserts, and sweet drinks.']},
+      {id:13,name:'Sashimi Dinner',cat:'Restaurant',cuisine:'Eating Out',emoji:'🍣',time:'Order',servings:1,macros:{cal:360,fat:20,pro:38,carbs:4},ingredients:[{name:'Sashimi assortment',qty:1,unit:'order'},{name:'Seaweed salad',qty:'small',unit:'if tolerated'}],steps:['Order sashimi, not rolls.','Avoid rice and sweet sauces.','Add cucumber salad or miso if needed.']},
       {id:14,name:'Burger Out, Clean',cat:'Restaurant',cuisine:'Eating Out',emoji:'🥬',time:'Order',servings:1,macros:{cal:430,fat:28,pro:31,carbs:6},ingredients:[{name:'Bunless burger',qty:1,unit:'burger'}],steps:['Order bunless.','No fries.','Add salad or extra patty if needed.']},
-      {id:15,name:'Cauliflower & Lamb Skillet',cat:'Dinner',cuisine:'Daily',emoji:'🥘',time:'18 min',servings:1,macros:{cal:560,fat:38,pro:34,carbs:8},ingredients:[{name:'Lamb chops',qty:220,unit:'g'},{name:'Tahini',qty:1,unit:'tbsp'}],steps:['Cook lamb in skillet.','Roast or sauté cauliflower.','Finish with tahini drizzle.']},
-      {id:16,name:'Emergency Omelet Plate',cat:'Emergency Keto',cuisine:'Daily',emoji:'⚡',time:'7 min',servings:1,macros:{cal:350,fat:26,pro:23,carbs:3},ingredients:[{name:'Omelet, cheese',qty:1,unit:'omelet'},{name:'Avocado',qty:.5,unit:'avocado'}],steps:['Make omelet.','Add avocado.','Done.']}
+      {id:15,name:'Cauliflower & Lamb Skillet',cat:'Dinner',cuisine:'Daily',emoji:'🥘',time:'18 min',servings:1,macros:{cal:560,fat:38,pro:34,carbs:8},ingredients:[{name:'Lamb chops',qty:220,unit:'g'},{name:'Cauliflower',qty:180,unit:'g'},{name:'Tahini',qty:1,unit:'tbsp'}],steps:['Cook lamb in skillet.','Roast or sauté cauliflower.','Finish with tahini drizzle.']},
+      {id:16,name:'Emergency Omelet Plate',cat:'Emergency Keto',cuisine:'Daily',emoji:'⚡',time:'7 min',servings:1,macros:{cal:350,fat:26,pro:23,carbs:3},ingredients:[{name:'Omelet, cheese',qty:1,unit:'omelet'},{name:'Avocado',qty:.5,unit:'avocado'}],steps:['Make omelet.','Add avocado.','Done.']},
+      {id:17,name:'Turkey & Goat Cheese Roll-Ups',cat:'Low Appetite',cuisine:'Daily',emoji:'🧀',time:'4 min',servings:1,macros:{cal:260,fat:14,pro:25,carbs:3},ingredients:[{name:'Turkey slices',qty:6,unit:'slices'},{name:'Goat cheese',qty:28,unit:'g'}],steps:['Spread goat cheese lightly.','Roll inside turkey slices.','Useful when appetite is low but protein matters.']},
+      {id:18,name:'Salmon Caesar Bowl',cat:'Fast Lunch',cuisine:'Daily',emoji:'🥗',time:'8 min',servings:1,macros:{cal:470,fat:30,pro:36,carbs:5},ingredients:[{name:'Salmon',qty:150,unit:'g'},{name:'Caesar salad, no croutons',qty:1,unit:'bowl'}],steps:['Cook or use leftover salmon.','Lay over Caesar base.','Keep dressing moderate.']},
+      {id:19,name:'Scrambled Eggs & Cottage Cheese',cat:'Breakfast',cuisine:'Daily',emoji:'🍳',time:'6 min',servings:1,macros:{cal:340,fat:20,pro:28,carbs:5},ingredients:[{name:'Eggs, whole',qty:3,unit:'eggs'},{name:'Cottage cheese, full-fat',qty:.5,unit:'cup'}],steps:['Soft scramble eggs.','Plate with cottage cheese on the side.','Use when you need easy protein fast.']},
+      {id:20,name:'Steak & Hearts of Palm Salad',cat:'Fast Lunch',cuisine:'Light',emoji:'🥩',time:'10 min',servings:1,macros:{cal:420,fat:24,pro:34,carbs:7},ingredients:[{name:'Filet mignon',qty:140,unit:'g'},{name:'Hearts of palm',qty:1,unit:'cup'},{name:'Olive oil',qty:1,unit:'tbsp'}],steps:['Slice cooked steak thin.','Combine with hearts of palm and greens.','Dress simply with olive oil and salt.']},
+      {id:21,name:'Brisket & Cabbage Skillet',cat:'Dinner',cuisine:'Daily',emoji:'🍲',time:'20 min',servings:1,macros:{cal:510,fat:31,pro:38,carbs:8},ingredients:[{name:'Brisket',qty:180,unit:'g'},{name:'Cabbage',qty:2,unit:'cups'},{name:'Olive oil',qty:1,unit:'tbsp'}],steps:['Warm brisket in skillet.','Cook cabbage until tender with olive oil.','Serve together with mustard if desired.']},
+      {id:22,name:'Lamb Chops & Radicchio',cat:'Dinner',cuisine:'Classic',emoji:'🍖',time:'16 min',servings:1,macros:{cal:590,fat:42,pro:34,carbs:5},ingredients:[{name:'Lamb chops',qty:240,unit:'g'},{name:'Radicchio',qty:2,unit:'cups'},{name:'Olive oil',qty:1,unit:'tbsp'}],steps:['Sear lamb chops.','Char radicchio in the same pan.','Finish with olive oil and salt.']},
+      {id:23,name:'Turkey Slice Protein Plate',cat:'Low Appetite',cuisine:'Wegovy',emoji:'🦃',time:'3 min',servings:1,macros:{cal:230,fat:11,pro:24,carbs:4},ingredients:[{name:'Turkey slices',qty:8,unit:'slices'},{name:'Avocado',qty:.5,unit:'avocado'}],steps:['Plate turkey slices.','Add avocado.','Useful when appetite is low but you still need protein.']},
+      {id:24,name:'Labneh, Salmon & Cucumber Plate',cat:'Low Appetite',cuisine:'Light',emoji:'🥒',time:'4 min',servings:1,macros:{cal:290,fat:19,pro:22,carbs:4},ingredients:[{name:'Smoked salmon',qty:85,unit:'g'},{name:'Labneh',qty:2,unit:'tbsp'},{name:'Cucumber',qty:.5,unit:'cucumber'}],steps:['Spread labneh on plate.','Add smoked salmon and cucumber.','Eat cold.']},
+      {id:25,name:'Chicken Breast & Green Beans',cat:'Dinner',cuisine:'Daily',emoji:'🍗',time:'18 min',servings:1,macros:{cal:430,fat:17,pro:46,carbs:8},ingredients:[{name:'Chicken breast',qty:200,unit:'g'},{name:'Green beans',qty:180,unit:'g'},{name:'Butter',qty:1,unit:'tbsp'}],steps:['Cook chicken breast until just done.','Sauté green beans in butter.','Serve immediately.']},
+      {id:26,name:'Feta Omelet & Endive',cat:'Breakfast',cuisine:'Daily',emoji:'🧀',time:'8 min',servings:1,macros:{cal:320,fat:24,pro:20,carbs:4},ingredients:[{name:'Eggs, whole',qty:3,unit:'eggs'},{name:'Feta cheese',qty:2,unit:'tbsp'},{name:'Endive',qty:2,unit:'heads'}],steps:['Make a quick omelet with feta.','Serve with crisp endive on the side.','Good savory breakfast option.']},
+      {id:27,name:'Salmon & Broccoli Bowl',cat:'Fast Lunch',cuisine:'Daily',emoji:'🐟',time:'10 min',servings:1,macros:{cal:460,fat:27,pro:38,carbs:7},ingredients:[{name:'Salmon',qty:170,unit:'g'},{name:'Broccoli',qty:2,unit:'cups'},{name:'Olive oil',qty:1,unit:'tbsp'}],steps:['Use cooked or leftover salmon.','Steam broccoli.','Finish with olive oil, lemon, salt.']},
+      {id:28,name:'Sardines & Avocado Emergency Plate',cat:'Emergency Keto',cuisine:'Daily',emoji:'🥑',time:'2 min',servings:1,macros:{cal:360,fat:28,pro:23,carbs:4},ingredients:[{name:'Sardines in olive oil',qty:1,unit:'tin'},{name:'Avocado',qty:.5,unit:'avocado'}],steps:['Open sardines.','Cut avocado.','That is the meal.']},
+      {id:29,name:'Mediterranean Fish Plate Order',cat:'Restaurant',cuisine:'Eating Out',emoji:'🐟',time:'Order',servings:1,macros:{cal:480,fat:27,pro:44,carbs:8},ingredients:[{name:'Mediterranean grilled fish plate',qty:1,unit:'plate'}],steps:['Choose grilled fish.','Double vegetables if possible.','Skip rice, pita, sweet sauces.']},
+      {id:30,name:'Breakfast Out Omelet',cat:'Restaurant',cuisine:'Eating Out',emoji:'🍳',time:'Order',servings:1,macros:{cal:390,fat:29,pro:24,carbs:5},ingredients:[{name:'Omelet, cheese',qty:1,unit:'omelet'},{name:'Avocado',qty:.5,unit:'avocado'}],steps:['Order cheese omelet.','Add avocado if available.','Skip toast, potatoes, fruit bowl.']}
     ];
 
-    function updateTodaySummary(){ updateTodaySummaryUI(); }
+    function saveState(){localStorage.setItem(STORAGE_KEY, JSON.stringify(state));updateHero();updateProgress()}
+    function formatHeader(){document.getElementById('header-date').textContent='Monday, April 13, 2026 start · personal cut system';}
 
-    function saveState(){
-      localStorage.setItem
+    function dayInfo(){
+      const start=new Date(START_DATE+'T00:00:00');
+      const now=new Date();
+      const diff=Math.max(0,Math.floor((now-start)/86400000));
+      return {day:diff+1,left:Math.max(0,90-diff-1)};
+    }
+
+    function updateHero(){
+      const info=dayInfo();
+      document.getElementById('hero-day').textContent=info.day;
+      document.getElementById('hero-left').textContent=info.left;
+      document.getElementById('hero-foods').textContent=FOODS.length;
+      document.getElementById('hero-recipes').textContent=RECIPES.length;
+    }
+
+    function setupTabs(){
+      document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+      }));
+    }
+
+    function renderChips(id, values, active, handler){
+      const root=document.getElementById(id);
+      root.innerHTML=values.map(v=>`<button class="chip ${v===active?'active':''}" data-v="${escapeHtml(v)}">${escapeHtml(v)}</button>`).join('');
+      root.querySelectorAll('.chip').forEach(chip=>chip.addEventListener('click',()=>handler(chip.dataset.v)));
+    }
+
+    function renderFoodChips(){renderChips('food-chips',['All',...new Set(FOODS.map(f=>f.cat))],state.foodCat,v=>{state.foodCat=v;saveState();renderFoodChips();renderFoods();});}
+    function renderRecipeChips(){renderChips('recipe-chips',['All',...new Set(RECIPES.map(r=>r.cat))],state.recipeCat,v=>{state.recipeCat=v;saveState();renderRecipeChips();renderRecipes();});}
+
+    function renderFoods(){
+      const q=(document.getElementById('food-search').value||'').trim().toLowerCase();
+      const list=FOODS.filter(f=>(state.foodCat==='All'||f.cat===state.foodCat)&&(!q||(`${f.name} ${f.cat}`).toLowerCase().includes(q)));
+      const root=document.getElementById('foods-grid');
+      if(!list.length){root.innerHTML='<div class="empty" style="grid-column:1/-1">No foods found.</div>';return;}
+      root.innerHTML=list.map(f=>{
+        const grams=f.unit?f.unitG:100;
+        const mult=grams/100;
+        return `<div class="food-card" onclick="openFood(${f.id})"><div><div class="food-name">${escapeHtml(f.name)}</div><div class="food-meta">${escapeHtml(f.cat)} · ${f.unit?`${grams}g per ${f.unit}`:'per 100g'}</div></div><div class="food-stats"><div class="stat"><strong>${Math.round(f.cal*mult)}</strong><span>kcal</span></div><div class="stat"><strong>${(f.fat*mult).toFixed(1)}g</strong><span>fat</span></div><div class="stat"><strong>${(f.pro*mult).toFixed(1)}g</strong><span>protein</span></div><div class="stat"><strong>${(f.nc*mult).toFixed(1)}g</strong><span>net carbs</span></div></div></div>`;
+      }).join('');
+    }
+
+    function openFood(id){
+      activeFood=FOODS.find(f=>f.id===id); if(!activeFood)return;
+      document.getElementById('modal-name').textContent=activeFood.name;
+      document.getElementById('modal-cat').textContent=activeFood.cat;
+      document.getElementById('modal-grams').value=activeFood.unit?activeFood.unitG:100;
+      if(activeFood.unit){document.getElementById('unit-block').style.display='block';document.getElementById('modal-units').value=1;} else document.getElementById('unit-block').style.display='none';
+      updateFoodModal();
+      document.getElementById('food-modal').classList.add('open');
+    }
+
+    function updateFoodModal(){
+      if(!activeFood)return;
+      const g=Math.max(1,Number(document.getElementById('modal-grams').value)||100);
+      const r=g/100;
+      document.getElementById('modal-cal').textContent=Math.round(activeFood.cal*r);
+      document.getElementById('modal-fat').textContent=(activeFood.fat*r).toFixed(1)+'g';
+      document.getElementById('modal-pro').textContent=(activeFood.pro*r).toFixed(1)+'g';
+      document.getElementById('modal-carb').textContent=(activeFood.nc*r).toFixed(1)+'g';
+      if(activeFood.unit){
+        const units=(g/activeFood.unitG);
+        document.getElementById('modal-units').value=units%1===0?units:units.toFixed(2);
+        document.getElementById('unit-note').textContent=`${document.getElementById('modal-units').value} ${activeFood.unit}${Number(document.getElementById('modal-units').value)>1?'s':''} ≈ ${g}g`;
+      }
+    }
+    function updateFromUnits(){if(!activeFood||!activeFood.unit)return;const units=Math.max(.25,Number(document.getElementById('modal-units').value)||1);document.getElementById('modal-grams').value=Math.round(units*activeFood.unitG);updateFoodModal();}
+    function dismissModal(e){if(e.target.id==='food-modal')closeModal();}
+    function closeModal(){document.getElementById('food-modal').classList.remove('open');activeFood=null;}
+
+    function renderRecipes(){
+      const q=(document.getElementById('recipe-search').value||'').trim().toLowerCase();
+      const list=RECIPES.filter(r=>(state.recipeCat==='All'||r.cat===state.recipeCat)&&(!q||(`${r.name} ${r.cat} ${r.cuisine}`).toLowerCase().includes(q)));
+      const root=document.getElementById('recipes-grid');
+      if(!list.length){root.innerHTML='<div class="empty" style="grid-column:1/-1">No recipes found.</div>';return;}
+      root.innerHTML=list.map(r=>`<div class="recipe-card"><div class="recipe-top" onclick="toggleRecipe(${r.id})"><div class="recipe-topline"><div class="recipe-emoji">${r.emoji}</div><div class="tag">${escapeHtml(r.cat)}</div></div><div class="recipe-name">${escapeHtml(r.name)}</div><div class="recipe-meta"><span>${escapeHtml(r.cuisine)}</span><span>${escapeHtml(r.time)}</span><span>${r.servings} serving${r.servings>1?'s':''}</span></div><div class="recipe-stats"><div class="stat"><strong>${r.macros.cal}</strong><span>kcal</span></div><div class="stat"><strong>${r.macros.fat}g</strong><span>fat</span></div><div class="stat"><strong>${r.macros.pro}g</strong><span>protein</span></div><div class="stat"><strong>${r.macros.carbs}g</strong><span>carbs</span></div></div></div><div class="recipe-detail" id="recipe-${r.id}"><div class="detail-grid"><div class="detail-block"><h4>Ingredients</h4><ul class="ingredient-list">${r.ingredients.map(i=>`<li>${i.qty} ${escapeHtml(i.unit)} ${escapeHtml(i.name)}</li>`).join('')}</ul></div><div class="detail-block"><h4>Method</h4><ol class="steps-list">${r.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ol></div></div><div style="margin-top:14px"><button class="btn" onclick="event.stopPropagation();addRecipeToShopping(${r.id})">Add ingredients to shopping</button></div></div></div>`).join('');
+    }
+    function toggleRecipe(id){document.getElementById('recipe-'+id).classList.toggle('open');}
+
+    function defaultToday(){document.getElementById('log-date').value=new Date().toISOString().slice(0,10);}
+    function clearForm(){defaultToday();['log-weight','log-carbs','log-protein','log-water','log-steps','log-energy','log-digestion','log-notes'].forEach(id=>document.getElementById(id).value='');document.getElementById('log-workout').value='No';document.getElementById('log-adherence').value='Yes';updateDashboardSummary();}
+    function saveLog(){
+      const log={
+        date:document.getElementById('log-date').value||new Date().toISOString().slice(0,10),
+        weight:num('log-weight'),carbs:num('log-carbs'),protein:num('log-protein'),water:num('log-water'),steps:num('log-steps'),
+        workout:document.getElementById('log-workout').value,adherence:document.getElementById('log-adherence').value,
+        energy:num('log-energy'),digestion:num('log-digestion'),notes:document.getElementById('log-notes').value.trim()
+      };
+      state.logs=state.logs.filter(l=>l.date!==log.date);
+      state.logs.push(log);
+      state.logs.sort((a,b)=>a.date.localeCompare(b.date));
+      saveState(); renderLogs(); updateDashboardSummary(); toast('Daily log saved');
+    }
+    function num(id){const v=document.getElementById(id).value; return v===''?null:Number(v);}
+
+    function latestLog(){return [...state.logs].sort((a,b)=>b.date.localeCompare(a.date))[0]||null;}
+    function updateDashboardSummary(){
+      const log=latestLog();
+      if(!log){document.getElementById('status-title').textContent='Ready';document.getElementById('status-text').textContent='Log today’s numbers and the app will give you a simple read on where you stand.';document.getElementById('summary-loss').textContent='—';document.getElementById('summary-average').textContent='—';return;}
+      const notes=[];
+      if(log.carbs!=null) notes.push(log.carbs<=25?'Carbs on target':'Carbs high');
+      if(log.protein!=null) notes.push(log.protein>=180?'Protein strong':'Protein low');
+      if(log.water!=null) notes.push(log.water>=3?'Hydration good':'Hydration low');
+      if(log.workout==='Yes') notes.push('Workout done');
+      document.getElementById('status-title').textContent=log.adherence==='Yes'?'On track':log.adherence==='Mostly'?'Mostly on track':'Needs tightening';
+      document.getElementById('status-text').textContent=notes.join(' · ')||'Latest log saved.';
+      const weights=state.logs.map(l=>l.weight).filter(v=>typeof v==='number');
+      if(weights.length){document.getElementById('summary-loss').textContent=(weights[weights.length-1]-weights[0]).toFixed(1)+' lb';}
+      else document.getElementById('summary-loss').textContent='—';
+      const last7=weights.slice(-7); if(last7.length){document.getElementById('summary-average').textContent=(last7.reduce((a,b)=>a+b,0)/last7.length).toFixed(1);} else document.getElementById('summary-average').textContent='—';
+    }
+
+    function renderLogs(){
+      const root=document.getElementById('logs-table');
+      if(!state.logs.length){root.innerHTML='<div class="empty">No logs yet. Start on the Dashboard tab.</div>';return;}
+      root.innerHTML=`<div class="log-row log-head"><div>Date</div><div>Weight</div><div>Carbs</div><div>Protein</div><div>Energy</div><div>Notes</div></div>`+
+      [...state.logs].sort((a,b)=>b.date.localeCompare(a.date)).map(l=>`<div class="log-row"><div>${l.date}</div><div>${l.weight??'—'}</div><div>${l.carbs??'—'}</div><div>${l.protein??'—'}</div><div>${l.energy??'—'}</div><div>${escapeHtml(l.notes||'')}</div></div>`).join('');
+    }
+
+    function updateProgress(){
+      const weights=state.logs.filter(l=>typeof l.weight==='number');
+      const start=weights.length?weights[0].weight:null;
+      const current=weights.length?weights[weights.length-1].weight:null;
+      document.getElementById('prog-start').textContent=start!=null?start.toFixed(1):'—';
+      document.getElementById('prog-current').textContent=current!=null?current.toFixed(1):'—';
+      document.getElementById('prog-change').textContent=(start!=null&&current!=null)?(current-start).toFixed(1):'—';
+    }
+
+    function exportData(){
+      const blob=new Blob([JSON.stringify({startDate:START_DATE,...state},null,2)],{type:'application/json'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='ben-cut-tracker-data.json'; a.click(); URL.revokeObjectURL(a.href); toast('Data exported');
+    }
+    function jumpToToday(){document.querySelector('[data-tab="dashboard"]').click(); document.getElementById('today-section').scrollIntoView({behavior:'smooth'});}
+
+    let toastTimer; function toast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2200);}
+    function escapeHtml(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');}
+
+    function bind(){
+      document.getElementById('food-search').addEventListener('input',renderFoods);
+      document.getElementById('recipe-search').addEventListener('input',renderRecipes);
+      document.getElementById('modal-grams').addEventListener('input',updateFoodModal);
+      document.getElementById('modal-units').addEventListener('input',updateFromUnits);
+    }
+
+    function init(){
+      formatHeader();
+      setupTabs();
+      bind();
+      defaultToday();
+      renderFoodChips();
+      renderFoods();
+      renderRecipeChips();
+      renderRecipes();
+      renderLogs();
+      updateHero();
+      updateProgress();
+      updateDashboardSummary();
+    }
+    init();
+  </script>
+</body>
+</html>
