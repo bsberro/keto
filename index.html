@@ -388,20 +388,44 @@ function getLog(){ return S.log[TODAY] || []; }
 function getTotals(){ return getLog().reduce((a,e)=>({k:a.k+e.k,f:a.f+e.f,p:a.p+e.p,nc:a.nc+e.nc}),{k:0,f:0,p:0,nc:0}); }
 function updateDeadline(){
   const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const goal = new Date(GOAL_DATE + 'T00:00:00');
   const start = new Date(START_DATE + 'T00:00:00');
-  const daysLeft = Math.max(0, Math.ceil((goal - now) / 86400000));
-  const totalDays = Math.max(1, Math.ceil((goal - start) / 86400000));
-  const elapsedDays = Math.max(0, Math.min(totalDays, Math.ceil((now - start) / 86400000)));
-  const main = daysLeft + ' days';
-  const sub = `${elapsedDays} days in · ${Math.max(0, totalDays - elapsedDays)} days left`;
+
+  const totalDays = Math.max(1, Math.round((goal - start) / 86400000));
+  const daysToStart = Math.max(0, Math.ceil((start - today) / 86400000));
+  const daysToGoal = Math.max(0, Math.ceil((goal - today) / 86400000));
+
+  let main = '';
+  let sub = '';
+
+  if (today < start) {
+    main = daysToStart + ' days';
+    sub = `starts ${START_DATE} · ${totalDays} day run`;
+  } else if (today >= goal) {
+    main = 'Goal date';
+    sub = `ended on ${GOAL_DATE}`;
+  } else {
+    const elapsedDays = Math.max(0, Math.min(totalDays, Math.floor((today - start) / 86400000)));
+    const daysLeftInRun = Math.max(0, Math.ceil((goal - today) / 86400000));
+    main = daysLeftInRun + ' days';
+    sub = `${elapsedDays} days in · ${daysLeftInRun} days left`;
+  }
+
   document.getElementById('deadline-count').textContent = main;
   document.getElementById('deadline-sub').textContent = sub;
   document.getElementById('deadline-count-top').textContent = main;
   document.getElementById('deadline-sub-top').textContent = sub;
+
   const weights = S.logs.map(l => l.weight).filter(v => typeof v === 'number');
   const current = weights.length ? weights[weights.length - 1] : null;
-  document.getElementById('pace-needed').textContent = current === null ? '—' : (((current - TARGET_WEIGHT) / Math.max(1 / 7, daysLeft / 7))).toFixed(1) + ' lb/wk';
+
+  if (current === null || today < start) {
+    document.getElementById('pace-needed').textContent = '—';
+  } else {
+    const weeksLeft = Math.max(1 / 7, daysToGoal / 7);
+    document.getElementById('pace-needed').textContent = (((current - TARGET_WEIGHT) / weeksLeft)).toFixed(1) + ' lb/wk';
+  }
 }
 function updateDash(){
   updateDeadline();
