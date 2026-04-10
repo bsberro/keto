@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KETO — Better Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0a0d12;
+      --bg-2:#0f131a;
+      --surface:#131923;
+      --surface-2:#18202b;
+      --surface-3:#1d2632;
+      --border:#263140;
+      --border-soft:rgba(255,255,255,.06);
+      --text:#f4efe6;
+      --muted:#94a0b2;
+      --muted-2:#6f7887;
+      --green:#8db16c;
+      --green-2:#5e8c40;
+      --green-soft:rgba(141,177,108,.14);
+      --gold:#cda35a;
+      --gold-soft:rgba(205,163,90,.14);
+      --red:#d36b6b;
+      --red-soft:rgba(211,107,107,.14);
+      --blue:#6ea9d8;
+      --blue-soft:rgba(110,169,216,.14);
+      --shadow:0 18px 60px rgba(0,0,0,.28);
+      --radius:18px;
+      --radius-sm:12px;
+      --max:1240px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(141,177,108,.08), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(205,163,90,.08), transparent 22%),
+        linear-gradient(180deg,var(--bg),#090c11 65%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(circle at center, black 32%, transparent 88%);
+      opacity:.25;
+    }
+    .app{
+      position:relative;
+      z-index:1;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:28px 20px 64px;
+    }
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:26px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .brand-mark{
+      font-family:"Crimson Pro",serif;
+      font-size:34px;
+      font-weight:400;
+      letter-spacing:.26em;
+      color:var(--green);
+    }
+    .brand-sub{
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .top-actions{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:10px;
+    }
+    .pill,.ghost-btn,.solid-btn,.chip,.tab-btn,.icon-btn{border:none;font:inherit}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      color:var(--gold);
+      background:var(--gold-soft);
+      border:1px solid rgba(205,163,90,.26);
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.04em;
+    }
+    .ghost-btn,.solid-btn,.icon-btn,.chip,.tab-btn{transition:.2s ease;cursor:pointer}
+    .ghost-btn{
+      background:rgba(255,255,255,.02);
+      color:var(--muted);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 14px;
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.05em;
+    }
+    .ghost-btn:hover,.chip:hover,.tab-btn:hover,.icon-btn:hover{
+      color:var(--text);
+      border-color:#3a4758;
+      background:rgba(255,255,255,.035);
+    }
+    .solid-btn{
+      background:linear-gradient(180deg,var(--green),var(--green-2));
+      color:white;
+      border-radius:12px;
+      padding:11px 16px;
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.03em;
+      box-shadow:0 10px 30px rgba(94,140,64,.22);
+    }
+    .solid-btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+    .shell{
+      display:grid;
+      grid-template-columns:300px minmax(0,1fr);
+      gap:18px;
+      align-items:start;
+    }
+    .panel,.card,.hero{
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+      border:1px solid var(--border-soft);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+    .sidebar{
+      position:sticky;
+      top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .panel{padding:18px}
+    .panel-title,.section-title,.hero-title,.modal-title,.recipe-name,.food-name{
+      font-family:"Crimson Pro",serif;
+      letter-spacing:.01em;
+    }
+    .panel-title{font-size:22px;margin:0 0 14px;font-weight:500}
+    .target-grid{display:grid;gap:10px}
+    .target-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px 14px;
+    }
+    .target-meta small,.subtle,.helper,.kpi-label,.food-cat,.meta-line,.recipe-meta,.modal-helper,.empty{color:var(--muted)}
+    .target-meta strong,.kpi-value,.food-stat,.recipe-metric strong,.metric strong,.list-count{
+      display:block;
+      color:var(--text);
+    }
+    .target-meta strong{font-size:14px}
+    .target-meta small{font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+    .target-value{font-size:14px;font-weight:700}
+    .target-value.green{color:var(--green)}
+    .target-value.red{color:var(--red)}
+    .target-value.gold{color:var(--gold)}
+    .helper{font-size:12px;line-height:1.6;margin-top:12px}
+    .checklist{display:grid;gap:10px}
+    .check-row{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .check-row:last-child{border-bottom:none;padding-bottom:0}
+    .check-dot{
+      width:10px;height:10px;border-radius:50%;
+      background:var(--green);
+      margin-top:6px;box-shadow:0 0 0 6px rgba(141,177,108,.12);
+      flex:0 0 auto;
+    }
+    .check-row span{font-size:13px;line-height:1.55;color:var(--text)}
+    .main{display:flex;flex-direction:column;gap:18px}
+    .hero{padding:24px;overflow:hidden;position:relative}
+    .hero::after{
+      content:"";position:absolute;right:-80px;top:-80px;width:240px;height:240px;border-radius:50%;
+      background:radial-gradient(circle, rgba(141,177,108,.18), transparent 68%);
+      pointer-events:none;
+    }
+    .hero-top{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px;
+    }
+    .hero-title{margin:0;font-size:36px;font-weight:500;line-height:1}
+    .hero-copy{margin-top:8px;max-width:720px;color:var(--muted);font-size:14px;line-height:1.65}
+    .hero-stats{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
+    }
+    .kpi{
+      padding:16px;border-radius:16px;background:rgba(0,0,0,.16);
+      border:1px solid rgba(255,255,255,.05);min-height:108px;display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.14em}
+    .kpi-value{
+      font-family:"Crimson Pro",serif;font-size:34px;font-weight:500;line-height:1;margin-top:8px;
+    }
+    .kpi-note{font-size:12px;color:var(--muted)}
+    .kpi.green .kpi-value{color:var(--green)}
+    .kpi.gold .kpi-value{color:var(--gold)}
+    .kpi.red .kpi-value{color:var(--red)}
+    .kpi.blue .kpi-value{color:var(--blue)}
+    .tabs-wrap{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    }
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab-btn{
+      background:var(--surface);color:var(--muted);border:1px solid var(--border);
+      border-radius:12px;padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    }
+    .tab-btn.active{
+      background:linear-gradient(180deg,rgba(141,177,108,.18),rgba(141,177,108,.10));
+      color:var(--text);border-color:rgba(141,177,108,.34);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .search-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .search-box{position:relative;flex:1 1 420px}
+    .search-box svg{
+      position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;
+    }
+    .search-box input,.input,.select,.modal input{
+      width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);
+      border-radius:14px;padding:13px 14px 13px 42px;outline:none;font:inherit;transition:.18s ease;
+    }
+    .input,.select,.modal input{padding-left:14px}
+    .search-box input:focus,.input:focus,.select:focus,.modal input:focus{
+      border-color:rgba(141,177,108,.55);box-shadow:0 0 0 4px rgba(141,177,108,.12);
+    }
+    .filter-row{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{
+      background:var(--surface);color:var(--muted);border:1px solid var(--border);
+      padding:10px 14px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;
+    }
+    .chip.active{color:var(--green);background:var(--green-soft);border-color:rgba(141,177,108,.34)}
+    .card{padding:18px}
+    .section-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;
+    }
+    .section-title{font-size:28px;font-weight:500;margin:0}
+    .section-sub{font-size:13px;color:var(--muted)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+    .foods-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;
+    }
+    .food-card{
+      background:linear-gradient(180deg,var(--surface),var(--bg-2));
+      border:1px solid var(--border);border-radius:16px;padding:15px;cursor:pointer;transition:.2s ease;
+      min-height:152px;display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .food-card:hover{
+      transform:translateY(-2px);border-color:rgba(141,177,108,.34);box-shadow:0 14px 36px rgba(0,0,0,.18);
+    }
+    .food-name{font-size:20px;margin:0 0 5px;font-weight:500;line-height:1.05}
+    .food-cat{font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+    .food-stats{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px;
+    }
+    .food-stat{
+      background:var(--surface-2);border:1px solid rgba(255,255,255,.04);border-radius:12px;
+      padding:10px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;
+    }
+    .food-stat strong{
+      font-size:18px;font-family:"Crimson Pro",serif;font-weight:500;text-transform:none;letter-spacing:0;margin-bottom:2px;
+    }
+    .recipes-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;
+    }
+    .recipe-card{
+      border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,var(--surface),var(--bg-2));overflow:hidden;transition:.2s ease;
+    }
+    .recipe-card:hover{border-color:rgba(141,177,108,.34)}
+    .recipe-top{padding:18px;cursor:pointer}
+    .recipe-eyebrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .emoji{font-size:32px;line-height:1}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 12px;
+      font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);
+      color:var(--muted);background:rgba(255,255,255,.02);
+    }
+    .recipe-name{margin:0 0 6px;font-size:28px;font-weight:500;line-height:1.05}
+    .recipe-meta{font-size:12px;display:flex;gap:12px;flex-wrap:wrap}
+    .recipe-metrics{
+      margin-top:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+    }
+    .recipe-metric{
+      background:var(--surface-2);border:1px solid rgba(255,255,255,.04);border-radius:12px;
+      padding:10px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
+    }
+    .recipe-metric strong{
+      font-size:18px;font-family:"Crimson Pro",serif;font-weight:500;letter-spacing:0;text-transform:none;margin-bottom:2px;
+    }
+    .recipe-detail{
+      display:none;border-top:1px solid rgba(255,255,255,.05);padding:18px;background:rgba(255,255,255,.01);
+    }
+    .recipe-detail.open{display:block}
+    .detail-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}
+    .detail-block h4{
+      margin:0 0 10px;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+    }
+    .ingredient-list,.steps-list{margin:0;padding:0;list-style:none}
+    .ingredient-list li,.steps-list li{
+      position:relative;padding:8px 0 8px 18px;border-bottom:1px solid rgba(255,255,255,.05);line-height:1.55;font-size:13px;
+    }
+    .ingredient-list li:last-child,.steps-list li:last-child{border-bottom:none}
+    .ingredient-list li::before,.steps-list li::before{
+      position:absolute;left:0;top:8px;color:var(--green);font-weight:700;
+    }
+    .ingredient-list li::before{content:"—"}
+    .steps-list{counter-reset:step}
+    .steps-list li{counter-increment:step;padding-left:24px;color:#d7dbe2}
+    .steps-list li::before{content:counter(step) "."}
+    .shop-layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:16px}
+    .shop-controls,.shop-list-card{
+      background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;
+    }
+    .field-label{
+      display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 8px;
+    }
+    .stack{display:grid;gap:12px}
+    .inline{display:grid;grid-template-columns:1fr 110px;gap:10px}
+    .action-row{display:flex;gap:8px;flex-wrap:wrap}
+    .shop-group + .shop-group{margin-top:18px}
+    .shop-head{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;padding-bottom:8px;
+      border-bottom:1px solid rgba(255,255,255,.05);font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+    }
+    .shop-item{
+      display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .shop-item:last-child{border-bottom:none}
+    .shop-item.done .shop-name{color:var(--muted);text-decoration:line-through}
+    .checkbox{
+      width:20px;height:20px;border-radius:6px;border:1px solid #3a4758;background:rgba(255,255,255,.02);
+      display:grid;place-items:center;cursor:pointer;transition:.18s ease;
+    }
+    .checkbox.checked{
+      background:linear-gradient(180deg,var(--green),var(--green-2));border-color:transparent;color:white;
+    }
+    .shop-name{font-size:14px}
+    .shop-qty{font-size:12px;color:var(--muted)}
+    .icon-btn{
+      width:34px;height:34px;border-radius:10px;border:1px solid var(--border);
+      background:rgba(255,255,255,.02);color:var(--muted);display:grid;place-items:center;padding:0;
+    }
+    .danger:hover{color:var(--red);border-color:rgba(211,107,107,.35);background:var(--red-soft)}
+    .empty{text-align:center;padding:36px 12px;line-height:1.7;font-size:14px}
+    .modal-overlay{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(5,7,10,.72);
+      backdrop-filter:blur(6px);z-index:50;padding:20px;
+    }
+    .modal-overlay.open{display:flex}
+    .modal{
+      width:min(500px,100%);background:linear-gradient(180deg,#121821,#0d1219);border:1px solid var(--border);
+      border-radius:24px;box-shadow:0 30px 100px rgba(0,0,0,.45);overflow:hidden;
+    }
+    .modal-body{padding:22px}
+    .modal-title{margin:0 0 4px;font-size:34px;font-weight:500;line-height:1}
+    .modal-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:18px}
+    .metric-grid{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px;
+    }
+    .metric{
+      background:var(--surface-2);border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:12px;
+      font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
+    }
+    .metric strong{
+      font-family:"Crimson Pro",serif;font-size:22px;font-weight:500;margin-bottom:3px;
+    }
+    .modal-fields{display:grid;gap:14px}
+    .modal-helper{font-size:12px;line-height:1.55}
+    .modal-actions{
+      display:flex;gap:10px;padding:18px 22px 22px;border-top:1px solid rgba(255,255,255,.05);
+    }
+    .modal-actions > *{flex:1}
+    .toast{
+      position:fixed;right:20px;bottom:20px;z-index:60;min-width:220px;max-width:320px;padding:14px 16px;
+      border-radius:14px;background:#121821;border:1px solid var(--border);box-shadow:0 18px 60px rgba(0,0,0,.3);
+      transform:translateY(10px);opacity:0;pointer-events:none;transition:.24s ease;font-size:13px;
+    }
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.success{color:var(--green);border-color:rgba(141,177,108,.35)}
+    .toast.info{color:var(--gold);border-color:rgba(205,163,90,.35)}
+    .toast.warn{color:var(--red);border-color:rgba(211,107,107,.35)}
+    @media (max-width:1100px){
+      .shell{grid-template-columns:1fr}
+      .sidebar{position:static;order:2}
+      .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .shop-layout{grid-template-columns:1fr}
+    }
+    @media (max-width:760px){
+      .app{padding:18px 14px 44px}
+      .topbar{flex-direction:column}
+      .top-actions{justify-content:flex-start}
+      .hero{padding:18px}
+      .hero-title{font-size:30px}
+      .hero-stats{grid-template-columns:1fr 1fr}
+      .foods-grid,.recipes-grid{grid-template-columns:1fr}
+      .detail-grid{grid-template-columns:1fr}
+      .metric-grid,.recipe-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .inline{grid-template-columns:1fr}
+      .shop-item{grid-template-columns:auto 1fr auto}
+      .shop-item .danger{grid-column:3}
+      .shop-qty{grid-column:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">KETO</div>
+        <div class="brand-sub" id="header-date">Loading…</div>
+      </div>
+      <div class="top-actions">
+        <div class="pill">🥑 Kosher Keto</div>
+        <button class="ghost-btn" onclick="resetShopping()">Reset shopping</button>
+        <button class="solid-btn" onclick="focusShoppingInput()">Add grocery item</button>
+      </div>
+    </div>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2 class="panel-title">Daily targets</h2>
+          <div class="target-grid">
+            <div class="target-item">
+              <div class="target-meta"><small>Net carbs</small><strong>Stay strict</strong></div>
+              <div class="target-value red">≤ 25g</div>
+            </div>
+            <div class="target-item">
+              <div class="target-meta"><small>Protein</small><strong>Lean retention</strong></div>
+              <div class="target-value gold">180g+</div>
+            </div>
+            <div class="target-item">
+              <div class="target-meta"><small>Calories</small><strong>Deficit window</strong></div>
+              <div class="target-value green">~ 1,900</div>
+            </div>
+          </div>
+          <div class="helper">Use this as a fast reference tool: find foods, compare macros, pull a recipe, and turn ingredients into a clean shopping list.</div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">How to use it</h2>
+          <div class="checklist">
+            <div class="check-row"><div class="check-dot"></div><span>Search foods by name or narrow by category.</span></div>
+            <div class="check-row"><div class="check-dot"></div><span>Open any food to scale macros by grams or by unit.</span></div>
+            <div class="check-row"><div class="check-dot"></div><span>Expand recipes and push ingredients straight to shopping.</span></div>
+            <div class="check-row"><div class="check-dot"></div><span>Shopping list auto-groups items and avoids duplicate clutter.</span></div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="hero">
+          <div class="hero-top">
+            <div>
+              <h1 class="hero-title">A cleaner, sharper keto dashboard.</h1>
+              <div class="hero-copy">Cleaner hierarchy, stronger search, proper data handling, duplicate-aware shopping logic, and no corrupted JavaScript blocks.</div>
+            </div>
+          </div>
+          <div class="hero-stats">
+            <div class="kpi green">
+              <div class="kpi-label">Foods</div>
+              <div class="kpi-value" id="kpi-foods">0</div>
+              <div class="kpi-note">Searchable macro references</div>
+            </div>
+            <div class="kpi gold">
+              <div class="kpi-label">Recipes</div>
+              <div class="kpi-value" id="kpi-recipes">0</div>
+              <div class="kpi-note">Ready-to-cook ideas</div>
+            </div>
+            <div class="kpi red">
+              <div class="kpi-label">Low-carb foods</div>
+              <div class="kpi-value" id="kpi-lowcarb">0</div>
+              <div class="kpi-note">At 3g net carbs or less</div>
+            </div>
+            <div class="kpi blue">
+              <div class="kpi-label">Shopping items</div>
+              <div class="kpi-value" id="kpi-shopping">0</div>
+              <div class="kpi-note">Saved locally in browser</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="tabs-wrap">
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="foods">Foods</button>
+              <button class="tab-btn" data-tab="recipes">Recipes</button>
+              <button class="tab-btn" data-tab="shopping">Shopping</button>
+            </div>
+            <div class="section-sub">Single-file HTML. Local storage. No dependencies except fonts.</div>
+          </div>
+        </section>
+
+        <section class="tab-panel active" id="panel-foods">
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">Foods</h2>
+                <div class="section-sub">Tap any card for scaled macros and quick portion math.</div>
+              </div>
+            </div>
+
+            <div class="search-row" style="margin-bottom:12px;">
+              <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                <input id="food-search" type="text" placeholder="Search foods, for example avocado, salmon, ribeye…">
+              </div>
+            </div>
+
+            <div class="filter-row" id="food-chips"></div>
+            <div class="foods-grid" id="foods-grid"></div>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="panel-recipes">
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">Recipes</h2>
+                <div class="section-sub">Cleaner expansion, better grouping, and one-click shopping import.</div>
+              </div>
+            </div>
+
+            <div class="search-row" style="margin-bottom:12px;">
+              <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                <input id="recipe-search" type="text" placeholder="Search recipes, cuisine, meal type…">
+              </div>
+            </div>
+
+            <div class="filter-row" id="recipe-chips"></div>
+            <div class="recipes-grid" id="recipes-grid"></div>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="panel-shopping">
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">Shopping</h2>
+                <div class="section-sub">Auto-grouped, duplicate-aware, and easy to copy.</div>
+              </div>
+            </div>
+
+            <div class="shop-layout">
+              <div class="shop-controls">
+                <div class="stack">
+                  <div>
+                    <label class="field-label" for="shop-name">Item name</label>
+                    <input class="input" id="shop-name" placeholder="Avocado, eggs, salmon…">
+                  </div>
+                  <div class="inline">
+                    <div>
+                      <label class="field-label" for="shop-qty">Quantity</label>
+                      <input class="input" id="shop-qty" placeholder="4, 2 lb, 1 carton…">
+                    </div>
+                    <div>
+                      <label class="field-label" for="shop-cat">Category</label>
+                      <select class="select" id="shop-cat"></select>
+                    </div>
+                  </div>
+                  <button class="solid-btn" onclick="addManualItem()">Add item</button>
+                  <div class="action-row">
+                    <button class="ghost-btn" onclick="copyList()">Copy list</button>
+                    <button class="ghost-btn" onclick="clearChecked()">Clear checked</button>
+                    <button class="ghost-btn" onclick="clearAll()">Clear all</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="shop-list-card">
+                <div id="shopping-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="food-modal" onclick="dismissModal(event)">
+    <div class="modal">
+      <div class="modal-body">
+        <h3 class="modal-title" id="modal-name">Food</h3>
+        <div class="modal-sub" id="modal-cat">Category</div>
+
+        <div class="metric-grid">
+          <div class="metric"><strong id="modal-cal">0</strong>Calories</div>
+          <div class="metric"><strong id="modal-fat">0g</strong>Fat</div>
+          <div class="metric"><strong id="modal-pro">0g</strong>Protein</div>
+          <div class="metric"><strong id="modal-carb">0g</strong>Net carbs</div>
+        </div>
+
+        <div class="modal-fields">
+          <div>
+            <label class="field-label" for="modal-grams">Grams</label>
+            <input id="modal-grams" type="number" min="1" max="2000" step="1">
+          </div>
+          <div id="unit-block" style="display:none;">
+            <label class="field-label" for="modal-units">Or use units</label>
+            <input id="modal-units" type="number" min="0.25" step="0.25">
+            <div class="modal-helper" id="unit-note" style="margin-top:8px;"></div>
+          </div>
+          <div class="modal-helper">Macros scale live. This is a clean reference modal now, not a dead-end popup.</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="ghost-btn" onclick="closeModal()">Close</button>
+        <button class="solid-btn" onclick="closeModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = 'keto_dashboard_better_v1';
+    const SHOP_CATEGORIES = ['Meat & Seafood','Dairy & Eggs','Produce','Nuts & Seeds','Oils','Pantry'];
+
+    const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
+      foodCat: 'All',
+      recipeCat: 'All',
+      shopping: []
+    };
+
+    let activeFood = null;
+
+    const FOODS = [
+      {id:1,name:'Beef, ground 80/20',cat:'Meat',cal:254,fat:17.2,pro:24.1,nc:0},
+      {id:2,name:'Ribeye steak',cat:'Meat',cal:291,fat:20.2,pro:27.9,nc:0},
+      {id:3,name:'Chicken breast',cat:'Meat',cal:165,fat:3.6,pro:31,nc:0,unit:'breast',unitG:170},
+      {id:4,name:'Chicken thigh, skin-on',cat:'Meat',cal:209,fat:13.5,pro:21.9,nc:0,unit:'thigh',unitG:100},
+      {id:5,name:'Turkey bacon',cat:'Meat',cal:218,fat:14,pro:17.5,nc:1.4,unit:'strip',unitG:28},
+      {id:6,name:'Salmon, Atlantic',cat:'Seafood',cal:208,fat:13.4,pro:20.5,nc:0},
+      {id:7,name:'Tuna, canned in oil',cat:'Seafood',cal:198,fat:8.1,pro:29.1,nc:0},
+      {id:8,name:'Cod',cat:'Seafood',cal:82,fat:0.7,pro:17.8,nc:0},
+      {id:9,name:'Eggs, whole',cat:'Dairy & Eggs',cal:155,fat:10.6,pro:12.6,nc:0.6,unit:'egg',unitG:50},
+      {id:10,name:'Butter, unsalted',cat:'Dairy & Eggs',cal:717,fat:81.1,pro:0.9,nc:0.1,unit:'tbsp',unitG:14},
+      {id:11,name:'Heavy cream',cat:'Dairy & Eggs',cal:340,fat:36.1,pro:2.1,nc:2.8,unit:'tbsp',unitG:15},
+      {id:12,name:'Cream cheese',cat:'Dairy & Eggs',cal:342,fat:34,pro:5.8,nc:4.1,unit:'tbsp',unitG:14},
+      {id:13,name:'Cheddar cheese',cat:'Dairy & Eggs',cal:403,fat:33.1,pro:24.9,nc:1.3,unit:'slice',unitG:28},
+      {id:14,name:'Mozzarella, whole milk',cat:'Dairy & Eggs',cal:280,fat:17.1,pro:27.5,nc:3.1,unit:'slice',unitG:28},
+      {id:15,name:'Parmesan',cat:'Dairy & Eggs',cal:431,fat:29,pro:38.5,nc:4.1,unit:'tbsp grated',unitG:5},
+      {id:16,name:'Avocado',cat:'Vegetables',cal:160,fat:14.7,pro:2,nc:1.8,unit:'medium avocado',unitG:150},
+      {id:17,name:'Spinach, raw',cat:'Vegetables',cal:23,fat:0.4,pro:2.9,nc:1.4,unit:'cup',unitG:30},
+      {id:18,name:'Broccoli',cat:'Vegetables',cal:34,fat:0.4,pro:2.8,nc:4,unit:'cup florets',unitG:91},
+      {id:19,name:'Cauliflower',cat:'Vegetables',cal:25,fat:0.3,pro:1.9,nc:2.9,unit:'cup florets',unitG:107},
+      {id:20,name:'Zucchini',cat:'Vegetables',cal:17,fat:0.3,pro:1.2,nc:2.1,unit:'medium zucchini',unitG:200},
+      {id:21,name:'Asparagus',cat:'Vegetables',cal:20,fat:0.1,pro:2.2,nc:1.8,unit:'spear',unitG:18},
+      {id:22,name:'Cucumber',cat:'Vegetables',cal:15,fat:0.1,pro:0.7,nc:2.2,unit:'medium cucumber',unitG:300},
+      {id:23,name:'Bell pepper, red',cat:'Vegetables',cal:31,fat:0.3,pro:1,nc:4.6,unit:'pepper',unitG:120},
+      {id:24,name:'Mushrooms, cremini',cat:'Vegetables',cal:22,fat:0.1,pro:3.1,nc:2.3,unit:'mushroom',unitG:18},
+      {id:25,name:'Arugula',cat:'Vegetables',cal:25,fat:0.7,pro:2.6,nc:2.1,unit:'cup',unitG:20},
+      {id:26,name:'Tomato, cherry',cat:'Vegetables',cal:18,fat:0.2,pro:0.9,nc:2.7,unit:'tomato',unitG:17},
+      {id:27,name:'Almonds',cat:'Nuts & Seeds',cal:579,fat:49.9,pro:21.2,nc:3.5},
+      {id:28,name:'Walnuts',cat:'Nuts & Seeds',cal:654,fat:65.2,pro:15.2,nc:2.6},
+      {id:29,name:'Macadamia nuts',cat:'Nuts & Seeds',cal:718,fat:75.8,pro:7.9,nc:1.5},
+      {id:30,name:'Chia seeds',cat:'Nuts & Seeds',cal:486,fat:30.7,pro:16.5,nc:2},
+      {id:31,name:'Olive oil, extra virgin',cat:'Fats & Oils',cal:884,fat:100,pro:0,nc:0,unit:'tbsp',unitG:14},
+      {id:32,name:'Avocado oil',cat:'Fats & Oils',cal:884,fat:100,pro:0,nc:0,unit:'tbsp',unitG:14},
+      {id:33,name:'Mayonnaise',cat:'Condiments',cal:680,fat:74.9,pro:1,nc:0.6,unit:'tbsp',unitG:13},
+      {id:34,name:'Mustard, Dijon',cat:'Condiments',cal:66,fat:3.6,pro:3.6,nc:5.3,unit:'tsp',unitG:5},
+      {id:35,name:'Guacamole',cat:'Condiments',cal:150,fat:13,pro:2,nc:3.5,unit:'tbsp',unitG:15},
+      {id:36,name:'Bone broth, chicken',cat:'Condiments',cal:14,fat:0.3,pro:2.7,nc:0.3,unit:'cup',unitG:240},
+      {id:37,name:'Almond flour',cat:'Baking',cal:571,fat:50,pro:21.4,nc:4.3},
+      {id:38,name:'Erythritol',cat:'Baking',cal:0,fat:0,pro:0,nc:0},
+      {id:39,name:'Dark chocolate 90%',cat:'Snacks',cal:598,fat:46.4,pro:8.1,nc:7},
+      {id:40,name:'Olives, Kalamata',cat:'Snacks',cal:145,fat:15.3,pro:1,nc:0.5},
+      {id:41,name:'Cheese crisps',cat:'Snacks',cal:522,fat:39.3,pro:36.7,nc:0.3},
+      {id:42,name:'Coffee, black',cat:'Beverages',cal:2,fat:0,pro:0.3,nc:0,unit:'cup',unitG:240},
+      {id:43,name:'Espresso',cat:'Beverages',cal:9,fat:0.2,pro:0.6,nc:1.2,unit:'shot',unitG:30},
+      {id:44,name:'Almond milk, unsweetened',cat:'Beverages',cal:13,fat:1.1,pro:0.4,nc:0.3,unit:'cup',unitG:240},
+      {id:45,name:'Coconut milk, full-fat',cat:'Beverages',cal:230,fat:24,pro:2.3,nc:2.8,unit:'cup',unitG:240}
+    ];
+
+    const RECIPES = [
+      {id:1,name:'Turkey Bacon & Egg Scramble',cat:'Breakfast',cuisine:'American',emoji:'🥚',time:'10 min',servings:1,macros:{cal:420,fat:30,pro:34,carbs:1},ingredients:[{name:'Eggs, whole',qty:3,unit:'large'},{name:'Turkey bacon',qty:3,unit:'strips'},{name:'Butter, unsalted',qty:1,unit:'tbsp'},{name:'Cheddar cheese',qty:30,unit:'g'}],steps:['Cook turkey bacon until crisp.','Whisk eggs with salt and pepper.','Add butter and scramble low and slow.','Finish with cheddar and bacon.']},
+      {id:2,name:'Avocado Chicken Salad',cat:'Lunch',cuisine:'American',emoji:'🥑',time:'15 min',servings:1,macros:{cal:490,fat:34,pro:38,carbs:4},ingredients:[{name:'Chicken breast',qty:200,unit:'g'},{name:'Avocado',qty:1,unit:'medium'},{name:'Mayonnaise',qty:2,unit:'tbsp'},{name:'Arugula',qty:50,unit:'g'}],steps:['Cube cooked chicken.','Mash avocado with mayo and seasoning.','Fold everything together.','Serve over arugula.']},
+      {id:3,name:'Ribeye with Herb Butter',cat:'Dinner',cuisine:'American',emoji:'🥩',time:'20 min',servings:1,macros:{cal:680,fat:52,pro:48,carbs:0},ingredients:[{name:'Ribeye steak',qty:300,unit:'g'},{name:'Butter, unsalted',qty:2,unit:'tbsp'},{name:'Garlic',qty:2,unit:'cloves'}],steps:['Season steak well.','Sear hard in a hot pan.','Add butter and baste.','Rest before slicing.']},
+      {id:4,name:'Salmon with Lemon Butter',cat:'Dinner',cuisine:'American',emoji:'🐟',time:'15 min',servings:1,macros:{cal:520,fat:38,pro:42,carbs:2},ingredients:[{name:'Salmon, Atlantic',qty:200,unit:'g'},{name:'Butter, unsalted',qty:2,unit:'tbsp'},{name:'Asparagus',qty:150,unit:'g'}],steps:['Pat salmon dry and season.','Sear and baste with butter.','Cook asparagus in the same pan.','Finish with lemon.']},
+      {id:5,name:'Broccoli Cheddar Soup',cat:'Dinner',cuisine:'American',emoji:'🥣',time:'30 min',servings:3,macros:{cal:380,fat:28,pro:18,carbs:8},ingredients:[{name:'Broccoli',qty:400,unit:'g'},{name:'Heavy cream',qty:200,unit:'ml'},{name:'Bone broth, chicken',qty:400,unit:'ml'},{name:'Cheddar cheese',qty:150,unit:'g'}],steps:['Simmer broccoli in broth.','Blend partially.','Add cream and cheddar.','Season and serve.']},
+      {id:6,name:'Shakshuka',cat:'Breakfast',cuisine:'Middle Eastern',emoji:'🍳',time:'25 min',servings:2,macros:{cal:320,fat:22,pro:18,carbs:8},ingredients:[{name:'Eggs, whole',qty:4,unit:'large'},{name:'Bell pepper, red',qty:1,unit:'pepper'},{name:'Tomato, cherry',qty:300,unit:'g'},{name:'Feta cheese',qty:60,unit:'g'}],steps:['Cook pepper and tomato into a sauce.','Make wells and add eggs.','Cover until eggs set.','Finish with feta.']},
+      {id:7,name:'Chicken Shawarma',cat:'Dinner',cuisine:'Middle Eastern',emoji:'🫔',time:'30 min',servings:3,macros:{cal:480,fat:26,pro:52,carbs:4},ingredients:[{name:'Chicken thigh, skin-on',qty:700,unit:'g'},{name:'Olive oil, extra virgin',qty:3,unit:'tbsp'},{name:'Lemon juice',qty:2,unit:'tbsp'}],steps:['Marinate chicken with spices.','Cook hot until charred.','Slice thin.','Serve with lettuce and tahini.']},
+      {id:8,name:'Salade Niçoise',cat:'Lunch',cuisine:'French',emoji:'🥗',time:'20 min',servings:2,macros:{cal:420,fat:28,pro:36,carbs:6},ingredients:[{name:'Tuna, canned in oil',qty:200,unit:'g'},{name:'Eggs, whole',qty:4,unit:'large'},{name:'Asparagus',qty:150,unit:'g'},{name:'Olives, Kalamata',qty:50,unit:'g'}],steps:['Boil eggs and blanch asparagus.','Assemble salad components.','Dress with olive oil and mustard.','Serve chilled or room temp.']},
+      {id:9,name:'Poulet Rôti aux Herbes',cat:'Dinner',cuisine:'French',emoji:'🍗',time:'1 hr 20 min',servings:4,macros:{cal:520,fat:32,pro:58,carbs:1},ingredients:[{name:'Chicken thigh, skin-on',qty:1000,unit:'g'},{name:'Butter, unsalted',qty:4,unit:'tbsp'},{name:'Olive oil, extra virgin',qty:2,unit:'tbsp'}],steps:['Make herb butter.','Rub chicken generously.','Roast until crisp and golden.','Rest before serving.']},
+      {id:10,name:'Greek Salad Bowl',cat:'Lunch',cuisine:'Mediterranean',emoji:'🫒',time:'10 min',servings:1,macros:{cal:320,fat:27,pro:10,carbs:5},ingredients:[{name:'Cucumber',qty:150,unit:'g'},{name:'Olives, Kalamata',qty:50,unit:'g'},{name:'Mozzarella, whole milk',qty:80,unit:'g'},{name:'Olive oil, extra virgin',qty:2,unit:'tbsp'}],steps:['Chop vegetables.','Add cheese and olives.','Dress simply.','Serve immediately.']},
+      {id:11,name:'Thai Basil Beef',cat:'Dinner',cuisine:'Asian',emoji:'🌿',time:'15 min',servings:2,macros:{cal:420,fat:24,pro:40,carbs:5},ingredients:[{name:'Beef, ground 80/20',qty:400,unit:'g'},{name:'Garlic',qty:4,unit:'cloves'},{name:'Eggs, whole',qty:2,unit:'egg'}],steps:['Brown beef hard.','Add garlic and sauce.','Finish with basil.','Top with egg.']},
+      {id:12,name:'Fat Bomb Bites',cat:'Snack',cuisine:'American',emoji:'🍫',time:'10 min + chill',servings:6,macros:{cal:180,fat:17,pro:4,carbs:2},ingredients:[{name:'Cream cheese',qty:120,unit:'g'},{name:'Butter, unsalted',qty:60,unit:'g'},{name:'Dark chocolate 90%',qty:30,unit:'g'},{name:'Erythritol',qty:2,unit:'tbsp'}],steps:['Mix softened ingredients.','Roll into small bites.','Chill until firm.','Store cold.']}
+    ];
+
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateKPIs();
+    }
+
+    function formatDate(){
+      const d = new Date();
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      document.getElementById('header-date').textContent = `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+    }
+
+    function updateKPIs(){
+      document.getElementById('kpi-foods').textContent = FOODS.length;
+      document.getElementById('kpi-recipes').textContent = RECIPES.length;
+      document.getElementById('kpi-lowcarb').textContent = FOODS.filter(f => f.nc <= 3).length;
+      document.getElementById('kpi-shopping').textContent = state.shopping.length;
+    }
+
+    function setupTabs(){
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
+        });
+      });
+    }
+
+    function categoryChips(containerId, values, activeValue, onClick){
+      const container = document.getElementById(containerId);
+      container.innerHTML = values.map(value => `
+        <button class="chip ${value === activeValue ? 'active' : ''}" data-value="${escapeHtml(value)}">${escapeHtml(value)}</button>
+      `).join('');
+      container.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => onClick(chip.dataset.value));
+      });
+    }
+
+    function renderFoodChips(){
+      const cats = ['All', ...new Set(FOODS.map(f => f.cat))];
+      categoryChips('food-chips', cats, state.foodCat, value => {
+        state.foodCat = value;
+        save();
+        renderFoods();
+        renderFoodChips();
+      });
+    }
+
+    function renderFoods(){
+      const q = (document.getElementById('food-search').value || '').trim().toLowerCase();
+      const list = FOODS.filter(f => {
+        const matchCat = state.foodCat === 'All' || f.cat === state.foodCat;
+        const matchSearch = !q || `${f.name} ${f.cat}`.toLowerCase().includes(q);
+        return matchCat && matchSearch;
+      });
+
+      const grid = document.getElementById('foods-grid');
+      if(!list.length){
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1;">No foods found for that search.</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(food => {
+        const portion = food.unit ? `${food.unitG}g per ${food.unit}` : 'Per 100g';
+        const carbs = food.unit ? (food.nc * food.unitG / 100) : food.nc;
+        const protein = food.unit ? (food.pro * food.unitG / 100) : food.pro;
+        const fat = food.unit ? (food.fat * food.unitG / 100) : food.fat;
+        const calories = food.unit ? (food.cal * food.unitG / 100) : food.cal;
+        return `
+          <article class="food-card" onclick="openFood(${food.id})">
+            <div>
+              <h3 class="food-name">${escapeHtml(food.name)}</h3>
+              <div class="food-cat">${escapeHtml(food.cat)} · ${escapeHtml(portion)}</div>
+            </div>
+            <div class="food-stats">
+              <div class="food-stat"><strong>${Math.round(calories)}</strong>kcal</div>
+              <div class="food-stat"><strong>${fat.toFixed(1)}g</strong>fat</div>
+              <div class="food-stat"><strong>${protein.toFixed(1)}g</strong>protein</div>
+              <div class="food-stat"><strong>${carbs.toFixed(1)}g</strong>net carbs</div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function openFood(id){
+      activeFood = FOODS.find(f => f.id === id);
+      if(!activeFood) return;
+
+      document.getElementById('modal-name').textContent = activeFood.name;
+      document.getElementById('modal-cat').textContent = activeFood.cat;
+      const grams = activeFood.unit ? activeFood.unitG : 100;
+      document.getElementById('modal-grams').value = grams;
+
+      const unitBlock = document.getElementById('unit-block');
+      if(activeFood.unit){
+        unitBlock.style.display = 'block';
+        document.getElementById('modal-units').value = 1;
+        document.getElementById('unit-note').textContent = `1 ${activeFood.unit} ≈ ${activeFood.unitG}g`;
+      } else {
+        unitBlock.style.display = 'none';
+      }
+
+      computeModalFromGrams();
+      document.getElementById('food-modal').classList.add('open');
+    }
+
+    function computeModalFromGrams(){
+      if(!activeFood) return;
+      const grams = Math.max(1, Number(document.getElementById('modal-grams').value) || 100);
+      const ratio = grams / 100;
+      document.getElementById('modal-cal').textContent = Math.round(activeFood.cal * ratio);
+      document.getElementById('modal-fat').textContent = `${(activeFood.fat * ratio).toFixed(1)}g`;
+      document.getElementById('modal-pro').textContent = `${(activeFood.pro * ratio).toFixed(1)}g`;
+      document.getElementById('modal-carb').textContent = `${(activeFood.nc * ratio).toFixed(1)}g`;
+      if(activeFood.unit){
+        const units = grams / activeFood.unitG;
+        document.getElementById('modal-units').value = units % 1 === 0 ? units : units.toFixed(2);
+        document.getElementById('unit-note').textContent = `${document.getElementById('modal-units').value} ${activeFood.unit}${Number(document.getElementById('modal-units').value) > 1 ? 's' : ''} ≈ ${grams}g`;
+      }
+    }
+
+    function computeModalFromUnits(){
+      if(!activeFood || !activeFood.unit) return;
+      const units = Math.max(0.25, Number(document.getElementById('modal-units').value) || 1);
+      const grams = Math.round(units * activeFood.unitG);
+      document.getElementById('modal-grams').value = grams;
+      computeModalFromGrams();
+    }
+
+    function dismissModal(e){
+      if(e.target.id === 'food-modal') closeModal();
+    }
+
+    function closeModal(){
+      document.getElementById('food-modal').classList.remove('open');
+      activeFood = null;
+    }
+
+    function renderRecipeChips(){
+      const cats = ['All', ...new Set(RECIPES.map(r => r.cat))];
+      categoryChips('recipe-chips', cats, state.recipeCat, value => {
+        state.recipeCat = value;
+        save();
+        renderRecipes();
+        renderRecipeChips();
+      });
+    }
+
+    function renderRecipes(){
+      const q = (document.getElementById('recipe-search').value || '').trim().toLowerCase();
+      const list = RECIPES.filter(r => {
+        const matchCat = state.recipeCat === 'All' || r.cat === state.recipeCat;
+        const pool = `${r.name} ${r.cat} ${r.cuisine}`.toLowerCase();
+        const matchSearch = !q || pool.includes(q);
+        return matchCat && matchSearch;
+      });
+
+      const grid = document.getElementById('recipes-grid');
+      if(!list.length){
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1;">No recipes match that filter.</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(recipe => `
+        <article class="recipe-card">
+          <div class="recipe-top" onclick="toggleRecipe(${recipe.id})">
+            <div class="recipe-eyebrow">
+              <div class="emoji">${recipe.emoji}</div>
+              <div class="tag">${escapeHtml(recipe.cuisine)}</div>
+            </div>
+            <h3 class="recipe-name">${escapeHtml(recipe.name)}</h3>
+            <div class="recipe-meta">
+              <span>⏱ ${escapeHtml(recipe.time)}</span>
+              <span>${escapeHtml(recipe.cat)}</span>
+              <span>${recipe.servings} serving${recipe.servings > 1 ? 's' : ''}</span>
+            </div>
+            <div class="recipe-metrics">
+              <div class="recipe-metric"><strong>${recipe.macros.cal}</strong>kcal</div>
+              <div class="recipe-metric"><strong>${recipe.macros.fat}g</strong>fat</div>
+              <div class="recipe-metric"><strong>${recipe.macros.pro}g</strong>protein</div>
+              <div class="recipe-metric"><strong>${recipe.macros.carbs}g</strong>carbs</div>
+            </div>
+          </div>
+          <div class="recipe-detail" id="recipe-${recipe.id}">
+            <div class="detail-grid">
+              <div class="detail-block">
+                <h4>Ingredients</h4>
+                <ul class="ingredient-list">
+                  ${recipe.ingredients.map(i => `<li>${i.qty ? `${i.qty} ${i.unit} ` : ''}${escapeHtml(i.name)}</li>`).join('')}
+                </ul>
+              </div>
+              <div class="detail-block">
+                <h4>Method</h4>
+                <ol class="steps-list">
+                  ${recipe.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}
+                </ol>
+              </div>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="solid-btn" onclick="event.stopPropagation(); addRecipeToShopping(${recipe.id})">Add ingredients to shopping</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function toggleRecipe(id){
+      document.getElementById(`recipe-${id}`).classList.toggle('open');
+    }
+
+    function normalizeName(name){
+      return name.trim().toLowerCase();
+    }
+
+    function mergeOrPushItem(item){
+      const key = normalizeName(item.name);
+      const existing = state.shopping.find(x => normalizeName(x.name) === key && (x.qty || '') === (item.qty || ''));
+      if(existing) return;
+      state.shopping.push({
+        id: Date.now() + Math.random(),
+        checked: false,
+        ...item
+      });
+    }
+
+    function addRecipeToShopping(id){
+      const recipe = RECIPES.find(r => r.id === id);
+      if(!recipe) return;
+      recipe.ingredients.forEach(i => {
+        mergeOrPushItem({
+          name: i.name,
+          qty: i.qty ? `${i.qty} ${i.unit}` : (i.unit || ''),
+          cat: guessShopCategory(i.name)
+        });
+      });
+      save();
+      renderShopping();
+      showToast(`${recipe.name} added to shopping`, 'success');
+    }
+
+    function guessShopCategory(name){
+      const n = name.toLowerCase();
+      if(/beef|chicken|lamb|salmon|tuna|cod|steak|bacon|turkey|duck|fish/.test(n)) return 'Meat & Seafood';
+      if(/egg|cheese|butter|cream|mozzarella|parmesan|cheddar|yogurt/.test(n)) return 'Dairy & Eggs';
+      if(/avocado|spinach|broccoli|cauliflower|zucchini|asparagus|cucumber|pepper|mushroom|arugula|tomato|lettuce|olive|lemon/.test(n)) return 'Produce';
+      if(/almond|walnut|macadamia|chia|seed/.test(n)) return 'Nuts & Seeds';
+      if(/oil|ghee/.test(n)) return 'Oils';
+      return 'Pantry';
+    }
+
+    function populateShopCategorySelect(){
+      document.getElementById('shop-cat').innerHTML = SHOP_CATEGORIES.map(cat => `<option>${cat}</option>`).join('');
+    }
+
+    function addManualItem(){
+      const nameEl = document.getElementById('shop-name');
+      const qtyEl = document.getElementById('shop-qty');
+      const catEl = document.getElementById('shop-cat');
+      const name = nameEl.value.trim();
+      const qty = qtyEl.value.trim();
+      const cat = catEl.value;
+      if(!name){
+        showToast('Add an item name first', 'warn');
+        nameEl.focus();
+        return;
+      }
+      mergeOrPushItem({ name, qty, cat });
+      nameEl.value = '';
+      qtyEl.value = '';
+      save();
+      renderShopping();
+      showToast('Item added', 'success');
+      nameEl.focus();
+    }
+
+    function focusShoppingInput(){
+      document.querySelector('[data-tab="shopping"]').click();
+      setTimeout(() => document.getElementById('shop-name').focus(), 0);
+    }
+
+    function renderShopping(){
+      const root = document.getElementById('shopping-list');
+      if(!state.shopping.length){
+        root.innerHTML = `<div class="empty">Your list is empty.<br>Add items manually or pull ingredients from recipes.</div>`;
+        return;
+      }
+
+      const groups = {};
+      state.shopping.forEach(item => {
+        const cat = item.cat || 'Pantry';
+        if(!groups[cat]) groups[cat] = [];
+        groups[cat].push(item);
+      });
+
+      root.innerHTML = SHOP_CATEGORIES.filter(cat => groups[cat]?.length).map(cat => `
+        <section class="shop-group">
+          <div class="shop-head">
+            <span>${cat}</span>
+            <span class="list-count">${groups[cat].length} item${groups[cat].length > 1 ? 's' : ''}</span>
+          </div>
+          ${groups[cat].map(item => `
+            <div class="shop-item ${item.checked ? 'done' : ''}">
+              <div class="checkbox ${item.checked ? 'checked' : ''}" onclick="toggleShopping(${item.id})">${item.checked ? '✓' : ''}</div>
+              <div>
+                <div class="shop-name">${escapeHtml(item.name)}</div>
+                ${item.qty ? `<div class="shop-qty">${escapeHtml(item.qty)}</div>` : ''}
+              </div>
+              <button class="icon-btn danger" onclick="removeShopping(${item.id})">✕</button>
+            </div>
+          `).join('')}
+        </section>
+      `).join('');
+    }
+
+    function toggleShopping(id){
+      const item = state.shopping.find(x => x.id === id);
+      if(!item) return;
+      item.checked = !item.checked;
+      save();
+      renderShopping();
+    }
+
+    function removeShopping(id){
+      state.shopping = state.shopping.filter(x => x.id !== id);
+      save();
+      renderShopping();
+    }
+
+    function clearChecked(){
+      state.shopping = state.shopping.filter(x => !x.checked);
+      save();
+      renderShopping();
+      showToast('Checked items cleared', 'info');
+    }
+
+    function clearAll(){
+      state.shopping = [];
+      save();
+      renderShopping();
+      showToast('Shopping list cleared', 'warn');
+    }
+
+    function resetShopping(){
+      clearAll();
+    }
+
+    function copyList(){
+      if(!state.shopping.length){
+        showToast('Shopping list is empty', 'info');
+        return;
+      }
+      const groups = {};
+      state.shopping.forEach(item => {
+        const cat = item.cat || 'Pantry';
+        if(!groups[cat]) groups[cat] = [];
+        groups[cat].push(item);
+      });
+      const text = SHOP_CATEGORIES.filter(cat => groups[cat]?.length).map(cat => {
+        return `${cat.toUpperCase()}\n` + groups[cat].map(item => `• ${item.name}${item.qty ? ` — ${item.qty}` : ''}`).join('\n');
+      }).join('\n\n');
+      navigator.clipboard.writeText(text).then(() => showToast('Shopping list copied', 'success'));
+    }
+
+    let toastTimer;
+    function showToast(message, type = 'info'){
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast show ${type}`;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.className = 'toast', 2600);
+    }
+
+    function escapeHtml(value){
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function bindSearch(){
+      document.getElementById('food-search').addEventListener('input', renderFoods);
+      document.getElementById('recipe-search').addEventListener('input', renderRecipes);
+      document.getElementById('shop-name').addEventListener('keydown', e => {
+        if(e.key === 'Enter') addManualItem();
+      });
+      document.getElementById('shop-qty').addEventListener('keydown', e => {
+        if(e.key === 'Enter') addManualItem();
+      });
+      document.getElementById('modal-grams').addEventListener('input', computeModalFromGrams);
+      document.getElementById('modal-units').addEventListener('input', computeModalFromUnits);
+    }
+
+    function init(){
+      formatDate();
+      setupTabs();
+      populateShopCategorySelect();
+      bindSearch();
+      renderFoodChips();
+      renderRecipeChips();
+      renderFoods();
+      renderRecipes();
+      renderShopping();
+      updateKPIs();
+    }
+
+    init();
+  </script>
+</body>
+</html>
